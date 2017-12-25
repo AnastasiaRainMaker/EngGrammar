@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EngGrammar</string>
+    <string name="enggrammar">Grammar</string>
+    <string name="grammar">Грамматика</string>
+    <string name="tests">Упражнения</string>
+    <string name="about">О программе</string>
 </resources>
