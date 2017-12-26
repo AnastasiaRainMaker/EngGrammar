@@ -2,11 +2,13 @@ package com.example.anastasia.enggrammar;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +43,7 @@ public class GrammarActivity extends AppCompatActivity {
     TextView menuGrammar;
     TextView menuTests;
     TextView menuAbout;
+    AlertDialog.Builder alertDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class GrammarActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(grammarAdapter);
         setUpViews();
+        drawerLayout.closeDrawer(GravityCompat.START);
         prepareTopics();
     }
 
@@ -110,7 +114,8 @@ public class GrammarActivity extends AppCompatActivity {
         exitImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GrammarActivity.this.finish();
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
         arrowClose.setOnClickListener(new View.OnClickListener() {
@@ -153,12 +158,16 @@ public class GrammarActivity extends AppCompatActivity {
              @Override
              public void onClick(View view) {
                  Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
+                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                  startActivity(i);
              }
          });
          menuTests.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
+                 Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                 startActivity(i);
 
              }
          });
@@ -167,8 +176,36 @@ public class GrammarActivity extends AppCompatActivity {
              public void onClick(View view) {
                  Intent i = new Intent(getApplicationContext(), AboutActivity.class);
                  startActivity(i);
+                 drawerLayout.closeDrawer(GravityCompat.START);
              }
          });
 
      }
+    @Override
+    public void onBackPressed() {
+        alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Вы уверены, что хотите выйти?")
+                   .setCancelable(true)
+                   .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           GrammarActivity.this.finish();
+                       }
+                   })
+                  .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialogInterface, int i) {
+                          dialogInterface.cancel();
+                      }
+                  });
+        AlertDialog alert = alertDialog.create();
+        alert.show();
+        int textViewId = alert.getContext().getResources().getIdentifier("android:id/message", null, null);
+        if (textViewId != 0) {
+            TextView tv = alert.findViewById(textViewId);
+            assert tv != null;
+            tv.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+    }
+
 }

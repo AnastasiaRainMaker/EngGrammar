@@ -8,5 +8,6 @@
     <color name="exercise_row_color">#DBECFF</color>
     <color name="white">#fff</color>
     <color name="darkBl">#9095D3</color>
+    <color name="medBl">#DBECFF</color>
 
 </resources>
