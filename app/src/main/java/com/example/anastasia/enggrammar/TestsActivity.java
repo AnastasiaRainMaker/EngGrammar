@@ -178,29 +178,6 @@ public class TestsActivity extends AppCompatActivity {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
-//        alertDialog = new AlertDialog.Builder(this);
-//        alertDialog.setMessage("Вы уверены, что хотите выйти?")
-//                .setCancelable(true)
-//                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        TestsActivity.this.finish();
-//                    }
-//                })
-//                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.cancel();
-//                    }
-//                });
-//        AlertDialog alert = alertDialog.create();
-//        alert.show();
-//        int textViewId = alert.getContext().getResources().getIdentifier("android:id/message", null, null);
-//        if (textViewId != 0) {
-//            TextView tv = alert.findViewById(textViewId);
-//            assert tv != null;
-//            tv.setTextColor(getResources().getColor(R.color.colorPrimary));
-//        }
     }
 
 }

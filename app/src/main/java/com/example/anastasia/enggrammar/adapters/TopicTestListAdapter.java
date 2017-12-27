@@ -1,12 +1,19 @@
 package com.example.anastasia.enggrammar.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anastasia.enggrammar.R;
+import com.example.anastasia.enggrammar.SingleTestActivity;
+import com.example.anastasia.enggrammar.TopicGrActivity;
+import com.example.anastasia.enggrammar.TopicTestsList;
 
 import java.util.List;
 
@@ -24,12 +31,12 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         public MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.topic_test_item);
-           }
+        }
     }
 
 
-    public TopicTestListAdapter(List<String> topicList) {
-        this.testList = topicList;
+    public TopicTestListAdapter(List<String> testList) {
+        this.testList = testList;
     }
 
     @Override
@@ -42,8 +49,17 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        String topic = testList.get(position);
+        final String topic = testList.get(position);
         holder.name.setText(topic);
+        holder.name.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent i = new Intent(context, SingleTestActivity.class);
+                i.putExtra("testNumber", topic);
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -51,4 +67,3 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         return testList.size();
     }
 }
-

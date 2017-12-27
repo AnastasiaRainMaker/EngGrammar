@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TopicTestsList extends AppCompatActivity {
     RecyclerView mRecycler;
-    List<String> testlest = new ArrayList<>();
+    List<String> testList = new ArrayList<>();
     TopicTestListAdapter topicTestListAdapter;
     ImageView arrowBack;
     TextView topicNameView;
@@ -29,7 +29,7 @@ public class TopicTestsList extends AppCompatActivity {
         setContentView(R.layout.activity_topic_test_list);
         topicNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_topic_test_list);
-        topicTestListAdapter = new TopicTestListAdapter(testlest);
+        topicTestListAdapter = new TopicTestListAdapter(testList);
         RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(topicTestListAdapter);
@@ -41,7 +41,7 @@ public class TopicTestsList extends AppCompatActivity {
     private void prepareTestList() {
         String testName = "Test";
         for (int i = 0; i < 10; i++) {
-            testlest.add(testName + " " + i);
+            testList.add(testName + " " + i);
         }
 
     }

@@ -21,6 +21,7 @@
         <activity android:name=".TestsActivity"  />
         <activity android:name=".TopicGrActivity" />
         <activity android:name=".TopicTestsList" />
+        <activity android:name=".SingleTestActivity" />
     </application>
 
 </manifest>
