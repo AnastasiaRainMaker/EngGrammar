@@ -3,18 +3,18 @@ package com.example.anastasia.enggrammar;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * Created by anastasia on 12/24/17.
  */
 
-public class SimpleDividerItemDecoration  extends RecyclerView.ItemDecoration{
+public class SimpleDividerItemDecorationBlue extends RecyclerView.ItemDecoration{
     private Drawable mDivider;
 
-    public SimpleDividerItemDecoration(Resources resources) {
-        mDivider = resources.getDrawable(R.drawable.line_divider);
+    public SimpleDividerItemDecorationBlue(Resources resources) {
+        mDivider = resources.getDrawable(R.drawable.line_divider_blue);
     }
 
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {

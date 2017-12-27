@@ -110,7 +110,7 @@ public class GrammarActivity extends AppCompatActivity {
     }
 
     protected void setUpViews(){
-        mRecycler.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
+        mRecycler.addItemDecoration(new SimpleDividerItemDecorationWhite(getResources()));
         exitImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

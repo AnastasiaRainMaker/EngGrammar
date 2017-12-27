@@ -5,10 +5,12 @@
     android:background="@drawable/test_row_selector"
     android:layout_height="80dp">
     <LinearLayout
-
+        android:id="@+id/tests_row"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true">
 
     <TextView
         android:id="@+id/test"

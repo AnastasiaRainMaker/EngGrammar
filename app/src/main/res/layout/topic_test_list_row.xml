@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="80dp">
+
+
+    <TextView
+        android:textColor="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/topic_test_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Test 1"
+        android:layout_weight="1"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:layout_marginStart="20dp" />
+
+</LinearLayout>
+

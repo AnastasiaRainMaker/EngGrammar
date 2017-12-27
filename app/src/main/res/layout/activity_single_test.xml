@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:background="@drawable/gradient"
+        android:elevation="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        >
+        <TextView
+            android:id="@+id/topic_grammar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Present Simple"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:fontFamily="@font/nautilus"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/arrow_back_toolbar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/write_arrow"
+            />
+
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        android:text="Тест 1"
+        android:gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/test_number"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:scrollbars="vertical"
+        android:requiresFadingEdge="vertical"/>
+    <TextView
+        android:id="@+id/go_to_rule"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/go_to_rule"
+        android:gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/check"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="50dp"
+        android:layout_width="340dp"
+        android:text="@string/check"
+        android:textColor="@color/white"
+        android:background="@drawable/button_selector"/>
+
+</LinearLayout>

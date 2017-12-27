@@ -2,13 +2,11 @@ package com.example.anastasia.enggrammar;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -109,7 +107,7 @@ public class TestsActivity extends AppCompatActivity {
     }
 
     protected void setUpViews(){
-        mRecycler.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
+        mRecycler.addItemDecoration(new SimpleDividerItemDecorationWhite(getResources()));
         exitImage.setVisibility(View.GONE);
         arrowClose.setOnClickListener(new View.OnClickListener() {
             @Override
