@@ -13,12 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.adapters.GrammarAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.willowtreeapps.spruce.Spruce;
 import com.willowtreeapps.spruce.animation.DefaultAnimations;
 import com.willowtreeapps.spruce.sort.DefaultSort;
@@ -44,10 +50,13 @@ public class GrammarActivity extends AppCompatActivity {
     TextView menuTests;
     TextView menuAbout;
     AlertDialog.Builder alertDialog;
+    DatabaseReference mDatabase;
+    ValueEventListener postListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grammar);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("topics");
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar);
@@ -67,25 +76,27 @@ public class GrammarActivity extends AppCompatActivity {
     }
 
     private void prepareTopics() {
-        ArrayList<String> options = new ArrayList<>();
-        options.add("");
-        Topic topic = new Topic("Present Simple", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Present Continuous", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Past Simple", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Future Simple", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Present Perfect", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Past Perfect", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Future Perfect", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
-        topic = new Topic("Conditionals", " ", " ", " ", " ", options);
-        topicList.add(topic.getName());
 
+        mDatabase.addValueEventListener(
+                new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Topic topic = data.getValue(Topic.class);
+                    if (topic != null) {
+                        topicList.add(topic.getName());
+                    }
+                }
+                grammarAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+               Log.e("Database", "loadPost:onCancelled", databaseError.toException());
+
+            }
+        });
     }
 
     private void initSpruce() {
@@ -208,4 +219,11 @@ public class GrammarActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (postListener != null) {
+            mDatabase.removeEventListener(postListener);
+        }
+    }
 }

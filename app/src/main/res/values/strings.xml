@@ -7,4 +7,5 @@
     <string name="go_to_tests">Перейти к упражнениям</string>
     <string name="check">Проверить</string>
     <string name="go_to_rule">Перейти к изучению правила</string>
+    <string name="clear_filled">Сбросить ответы</string>
 </resources>

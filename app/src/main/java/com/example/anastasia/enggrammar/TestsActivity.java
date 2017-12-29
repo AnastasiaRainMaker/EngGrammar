@@ -64,6 +64,8 @@ public class TestsActivity extends AppCompatActivity {
     }
 
     private void prepareTopics() {
+
+
         ArrayList<String> options = new ArrayList<>();
         options.add("");
         Topic topic = new Topic("Present Simple", " ", " ", " ", " ", options);

@@ -30,12 +30,13 @@
             />
 
     </android.support.v7.widget.Toolbar>
-     <TextView
-        android:id="@+id/test_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_test_content"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scrollbars="vertical"
-        android:requiresFadingEdge="vertical"/>
+        android:background="@null"
+        android:layout_height="390dp"
+       />
+
     <TextView
         android:id="@+id/go_to_rule"
         android:clickable="true"
@@ -48,13 +49,24 @@
         android:gravity="center_horizontal"/>
 
     <Button
+        android:layout_gravity="center_horizontal"
         android:id="@+id/check"
-        android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
         android:layout_height="50dp"
         android:layout_width="340dp"
         android:text="@string/check"
         android:textColor="@color/white"
         android:background="@drawable/button_selector"/>
+    <TextView
+        android:id="@+id/clear_filled"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/clear_filled"
+        android:gravity="center_horizontal"
+        />
 
 </LinearLayout>
