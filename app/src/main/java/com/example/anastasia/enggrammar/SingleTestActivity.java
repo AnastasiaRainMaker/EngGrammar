@@ -2,10 +2,13 @@ package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,27 +28,23 @@ import java.util.List;
 public class SingleTestActivity extends AppCompatActivity {
     ImageView arrowBack;
     TextView testNameView;
-    Button checkBtn;
     String testName;
-    TextView goToRule;
     RecyclerView mRecycler;
     SingleTestAdapter singleTestAdapter;
     List<String> questionList = new ArrayList<>();
     List<String> optionsList = new ArrayList<>();
     RadioGroup mRadioGroup;
     RecyclerView.LayoutManager mRecyclerManager;
-    TextView clear;
     Boolean isCleared;
+    BottomNavigationView bottomNavigationView;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_test);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         testName = getIntent().getStringExtra("testNumber");
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         testNameView = findViewById(R.id.topic_grammar_name);
-        checkBtn = findViewById(R.id.check);
-        goToRule = findViewById(R.id.go_to_rule);
-        clear = findViewById(R.id.clear_filled);
         mRecycler = findViewById(R.id.recycler_test_content);
         isCleared = false;
         singleTestAdapter = new SingleTestAdapter(optionsList, questionList, isCleared);
@@ -74,13 +73,28 @@ public class SingleTestActivity extends AppCompatActivity {
     }
 
     private void setUpViews() {
-        clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                singleTestAdapter.setIsCleared(true);
-                singleTestAdapter.notifyDataSetChanged();
-           }
-        });
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.clear:
+                                singleTestAdapter.setIsCleared(true);
+                                singleTestAdapter.notifyDataSetChanged();
+                                break;
+                            case R.id.check:
+                                Toast.makeText(SingleTestActivity.this, "Your test is checked", Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.go_to_rule:
+                                Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
+                                i.putExtra("topicName", testName);
+                                startActivity(i);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
         arrowBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,20 +102,6 @@ public class SingleTestActivity extends AppCompatActivity {
             }
         });
         testNameView.setText(testName);
-        checkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SingleTestActivity.this, "Your test is checked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        goToRule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-                i.putExtra("topicName", testName);
-                startActivity(i);
-            }
-        });
         if (mRadioGroup != null) {
             mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override

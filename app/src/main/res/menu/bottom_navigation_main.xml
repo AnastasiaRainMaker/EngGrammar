@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/clear"
+        android:enabled="true"
+        android:icon="@drawable/clear"
+        android:title="@string/clear"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/check"
+        android:enabled="true"
+        android:icon="@drawable/check"
+        android:title="@string/check"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/go_to_rule"
+        android:enabled="true"
+        android:icon="@drawable/read"
+        android:title="@string/grammar"
+        app:showAsAction="always" />
+
+</menu>
