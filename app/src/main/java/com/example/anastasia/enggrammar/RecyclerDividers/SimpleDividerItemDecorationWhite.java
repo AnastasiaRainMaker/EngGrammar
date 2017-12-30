@@ -1,20 +1,22 @@
-package com.example.anastasia.enggrammar;
+package com.example.anastasia.enggrammar.RecyclerDividers;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.support.v7.widget.RecyclerView;
+
+import com.example.anastasia.enggrammar.R;
 
 /**
  * Created by anastasia on 12/24/17.
  */
 
-public class SimpleDividerItemDecorationBlue extends RecyclerView.ItemDecoration{
+public class SimpleDividerItemDecorationWhite extends RecyclerView.ItemDecoration{
     private Drawable mDivider;
 
-    public SimpleDividerItemDecorationBlue(Resources resources) {
-        mDivider = resources.getDrawable(R.drawable.line_divider_blue);
+    public SimpleDividerItemDecorationWhite(Resources resources) {
+        mDivider = resources.getDrawable(R.drawable.line_divider);
     }
 
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {

@@ -11,12 +11,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.anastasia.enggrammar.POJO.Topic;
+import com.example.anastasia.enggrammar.RecyclerDividers.SimpleDividerItemDecorationWhite;
 import com.example.anastasia.enggrammar.adapters.TestsAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.willowtreeapps.spruce.Spruce;
 import com.willowtreeapps.spruce.animation.DefaultAnimations;
 import com.willowtreeapps.spruce.sort.DefaultSort;
@@ -41,11 +50,13 @@ public class TestsActivity extends AppCompatActivity {
     TextView menuGrammar;
     TextView menuTests;
     TextView menuAbout;
-    //AlertDialog.Builder alertDialog;
+    DatabaseReference mDatabase;
+    ValueEventListener postListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("topics");
         toolbar = findViewById(R.id.toolbar2);
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar2);
@@ -64,27 +75,26 @@ public class TestsActivity extends AppCompatActivity {
     }
 
     private void prepareTopics() {
+        postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Topic topic = data.getValue(Topic.class);
+                    if (topic != null) {
+                        testList.add(topic.getName());
+                    }
+                }
+                testsAdapter.notifyDataSetChanged();
 
+            }
 
-        ArrayList<String> options = new ArrayList<>();
-        options.add("");
-        Topic topic = new Topic("Present Simple", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Present Continuous", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Past Simple", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Future Simple", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Present Perfect", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Past Perfect", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Future Perfect", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
-        topic = new Topic("Conditionals", " ", " ", " ", " ", options);
-        testList.add(topic.getName());
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database", "loadPost:onCancelled", databaseError.toException());
 
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
     }
 
     private void initSpruce() {
@@ -180,6 +190,13 @@ public class TestsActivity extends AppCompatActivity {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (postListener != null) {
+            mDatabase.removeEventListener(postListener);
+        }
     }
 
 }

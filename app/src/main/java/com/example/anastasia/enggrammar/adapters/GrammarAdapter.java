@@ -10,9 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anastasia.enggrammar.R;
-import com.example.anastasia.enggrammar.Topic;
 import com.example.anastasia.enggrammar.TopicGrActivity;
-import com.example.anastasia.enggrammar.TopicTestsList;
 
 import java.util.List;
 

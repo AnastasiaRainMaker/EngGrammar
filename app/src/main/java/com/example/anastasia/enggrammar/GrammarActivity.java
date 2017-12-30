@@ -19,6 +19,9 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.anastasia.enggrammar.POJO.Topic;
+import com.example.anastasia.enggrammar.RecyclerDividers.SimpleDividerItemDecorationWhite;
 import com.example.anastasia.enggrammar.adapters.GrammarAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -77,8 +80,7 @@ public class GrammarActivity extends AppCompatActivity {
 
     private void prepareTopics() {
 
-        mDatabase.addValueEventListener(
-                new ValueEventListener() {
+        postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
@@ -96,7 +98,8 @@ public class GrammarActivity extends AppCompatActivity {
                Log.e("Database", "loadPost:onCancelled", databaseError.toException());
 
             }
-        });
+        };
+        mDatabase.addValueEventListener(postListener);
     }
 
     private void initSpruce() {
