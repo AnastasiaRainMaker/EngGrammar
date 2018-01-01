@@ -9,5 +9,65 @@
     <string name="clear_filled">Сбросить ответы</string>
     <string name="clear">Очистить</string>
     <string name="check">Проверить</string>
+    
+    <string name="Существительное">
+       <![CDATA[
+
+        <p><strong>Имя существительное </strong> - часть речи, которая обозначает предмет. Предметом в грамматике называется все то, о чем можно спросить: Who is this? Кто это? или What is this? Что это? Например: girl, car, cat, pen.</p>
+        <p>У данной части речи есть несколько характеристик, которые должен освоить учащийся для грамотного использования ее в речи.</p>
+        <p><font color="#9095D3">Во-первых</font>, у существительных есть категория <font color="#9095D3">числа</font>, единственное и множественное. В единственном числе слово используется в той же форме, в которой мы видим его в словаре. Если по смыслу требуется упомянуть несколько единиц этого предмета, необходимо использовать множественное число.
+        <p><font color="#9095D3">Образование множественного числа:</font></p>
+        <p>сущ. + <strong>S</strong>;</p>
+        <p>a book — book<strong>S</strong>;</p>
+        <p>a lake — lake<strong>S</strong>;</p>
+        <p>a girl — girl<strong>S</strong>;</p>
+        <p><font color="#9095D3">Особенности правописания:</font></p>
+        <p>В некоторых случаях требуется окончание <font color="#9095D3">-ES</font> в зависимости от того, какое окончание имело существительное в единственном числе.</p>
+        <p>a boy — boy<strong>S</strong>; (Гласный + Y)</p>
+        <p>a lady — ladI<strong>ES</strong>; (Согласный + Y)</p>
+        <p>a potato — potato<strong>ES</strong>;
+        a tomato — tomato<strong>ES</strong>;</p>
+        <p>a box — box<strong>ES</strong>;
+        a glass — glass<strong>ES</strong>;</p>
+        <p>a match — match<strong>ES</strong>;
+        a lash — lash<strong>ES</strong>;</p>
+        <p>a wolf — wol<strong>VES</strong>;
+        a wife — wi<strong>VES</strong>;</p>
+        <p><font color="#9095D3">Исключения:</font></p>
+        <p>a man  — men; a woman  — women;</p>
+        <p>a child — children; a goose  — geese;</p>
+        <p>a mouse — mice; a tooth — teeth;</p>
+        <p>a cliff — cliffs; a chief — chiefs;</p>
+        <p>a roof — roofs; a safe — safes;</p>
+        <p>a sheep — sheep; a deer — deer;</p>
+        <p>a fruit — fruit; a fish — fish;</p>
+        <p>hair — hair; a person - people</p>
+        <p><font color="#9095D3">Во-вторых</font>, единственных падеж существующий в теории грамматики английского — это <font color="#9095D3">притяжательный падеж</font>. Он используется для выражения принадлежности.</p>
+        <p>Образование:</p>
+        <p>1. Если предмет принадлежит человеку:</p>
+        <p>Mike +<strong>'S</strong> + bag;</p>
+        <p>My sister's dog;</p>
+        <p>2. Если предмет принадлежит животному или неодушевленной вещи:</p>
+        <p>A leg + <strong>OF</strong> + the table;</p>
+        <p>A page +<strong> OF</strong>+ the book;</p>
+        <p>Следует отметить тот факт, что <font color="#9095D3">род</font> у существительных в английском может присутствовать только у людей, домашних питомцев, которые нам особо дороги, либо героев сказок.</p>
+
+        ]]>
+    </string>
+
+    <string name="articles">
+       <![CDATA[
+
+
+       ]]>
+    </string>
+
+    <string name="adjective">
+       <![CDATA[
+
+
+       ]]>
+    </string>
+    <string name="about_app">Приложение EngGrammar ориентировано на изучающих английский язык уровня Beginner – Elementary (A1-A2). Программа поможет освоит теорию грамматики в доступной форме, а также закрепить полученные знания на практике путём выполнения тестовых заданий!</string>
 
 </resources>

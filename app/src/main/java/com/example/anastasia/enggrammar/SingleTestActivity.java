@@ -1,6 +1,7 @@
 package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,10 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.anastasia.enggrammar.POJO.Option;
+
 import com.example.anastasia.enggrammar.POJO.Question;
 import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.adapters.SingleTestAdapter;
@@ -149,19 +151,14 @@ public class SingleTestActivity extends AppCompatActivity {
             mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
+                    RadioButton radioButton = radioGroup.findViewById(i);
+                    if(!radioButton.getText().equals("a")) {
+                    radioButton.setBackgroundColor(getResources().getColor(R.color.red));
+                    }
                 }
             });
         }
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        if(postListener != null) {
-//            mDatabase.removeEventListener(postListener);
-//        }
     }
 
 }

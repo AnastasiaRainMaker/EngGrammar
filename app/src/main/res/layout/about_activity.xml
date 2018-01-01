@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
+        android:textColor="@color/colorPrimaryDark"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="HI"
-        android:textSize="30sp"
-        android:gravity="center_vertical"
-        android:layout_marginStart="150dp"/>
+        android:text="@string/about_app"
+        android:textSize="16sp"
+        android:gravity="center_horizontal"
+        />
 
 </LinearLayout>

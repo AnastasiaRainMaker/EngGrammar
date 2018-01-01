@@ -9,5 +9,6 @@
     <color name="white">#fff</color>
     <color name="darkBl">#9095D3</color>
     <color name="medBl">#DBECFF</color>
+    <color name="red">#B20000</color>
 
 </resources>
