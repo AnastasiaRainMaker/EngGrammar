@@ -102,4 +102,13 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
         i.putExtra("topicName", topicName);
         startActivity(i);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
+        i.putExtra("topicName", topicName);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
 }

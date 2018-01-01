@@ -132,7 +132,7 @@ public class SingleTestActivity extends AppCompatActivity {
                                 break;
                             case R.id.go_to_rule:
                                 Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-                                i.putExtra("topicName", testName);
+                                i.putExtra("topicName", topicName);
                                 startActivity(i);
                                 break;
                         }
