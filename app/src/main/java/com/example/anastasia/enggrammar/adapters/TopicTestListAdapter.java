@@ -24,16 +24,21 @@ import java.util.List;
 public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdapter.MyViewHolder> {
 
     private List<String> testList;
+    private OnItemClicked onClick;
+
+    public interface OnItemClicked {
+        void onItemClick(int position);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
+
             name = view.findViewById(R.id.topic_test_item);
         }
     }
-
 
     public TopicTestListAdapter(List<String> testList) {
         this.testList = testList;
@@ -48,16 +53,13 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        final String topic = testList.get(position);
-        holder.name.setText(topic);
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        final String testNumber = testList.get(position);
+        holder.name.setText(testNumber);
         holder.name.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                Intent i = new Intent(context, SingleTestActivity.class);
-                i.putExtra("testNumber", topic);
-                context.startActivity(i);
+                onClick.onItemClick(position);
             }
         });
     }
@@ -65,5 +67,9 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
     @Override
     public int getItemCount() {
         return testList.size();
+    }
+
+    public void setOnClick(OnItemClicked onClick) {
+        this.onClick=onClick;
     }
 }

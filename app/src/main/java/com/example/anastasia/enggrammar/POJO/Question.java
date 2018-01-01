@@ -1,24 +1,45 @@
 package com.example.anastasia.enggrammar.POJO;
 
+import android.app.VoiceInteractor;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by anastasia on 12/25/17.
  */
 public class Question {
     public String name;
-    public ArrayList<String> options;
+
+    public HashMap<String,String> options;
     public String answer;
+    public String text;
 
     public Question() {
 
     }
-    public Question(String name, String answer, ArrayList<String> options){
 
+    public Question(String name, String answer, HashMap<String,String> options, String text){
+        this.answer = answer;
         this.name = name;
+        this.text = text;
+        this.options = options;
+    }
+    public HashMap<String, String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(HashMap<String, String> options) {
         this.options = options;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public String getName() {
         return name;
@@ -28,13 +49,6 @@ public class Question {
         this.name = name;
     }
 
-    public ArrayList<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(ArrayList<String> options) {
-        this.options = options;
-    }
 
     public String getAnswer() {
         return answer;

@@ -1,5 +1,7 @@
 package com.example.anastasia.enggrammar;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.RecyclerDividers.SimpleDividerItemDecorationBlue;
 import com.example.anastasia.enggrammar.adapters.TopicTestListAdapter;
@@ -16,7 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * Created by anastasia on 12/26/17.
  */
 
-public class TopicTestsList extends AppCompatActivity {
+public class TopicTestsList extends AppCompatActivity implements TopicTestListAdapter.OnItemClicked {
     RecyclerView mRecycler;
     List<String> testList = new ArrayList<>();
     TopicTestListAdapter topicTestListAdapter;
@@ -83,13 +83,23 @@ public class TopicTestsList extends AppCompatActivity {
             }
         });
         topicNameView.setText(topicName);
+        topicTestListAdapter.setOnClick(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (postListener != null) {
+    protected void onStop() {
+        super.onStop();
+        if(postListener != null) {
             mDatabase.removeEventListener(postListener);
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        String testNumber = testList.get(position);
+        Intent i = new Intent(getApplicationContext(), SingleTestActivity.class);
+        i.putExtra("testNumber", testNumber);
+        i.putExtra("topicName", topicName);
+        startActivity(i);
     }
 }
