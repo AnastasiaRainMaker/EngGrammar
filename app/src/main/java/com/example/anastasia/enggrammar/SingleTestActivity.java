@@ -1,7 +1,7 @@
 package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,11 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.anastasia.enggrammar.POJO.Question;
 import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.adapters.SingleTestAdapter;
@@ -41,9 +38,7 @@ public class SingleTestActivity extends AppCompatActivity {
     String topicName;
     RecyclerView mRecycler;
     SingleTestAdapter singleTestAdapter;
-    List<String> questionList = new ArrayList<>();
-    List<String> optionsList = new ArrayList<>();
-    RadioGroup mRadioGroup;
+    List<Question> questionList = new ArrayList<>();
     RecyclerView.LayoutManager mRecyclerManager;
     Boolean isCleared;
     BottomNavigationView bottomNavigationView;
@@ -62,7 +57,7 @@ public class SingleTestActivity extends AppCompatActivity {
         testNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_test_content);
         isCleared = false;
-        singleTestAdapter = new SingleTestAdapter(optionsList, questionList, isCleared);
+        singleTestAdapter = new SingleTestAdapter(this, questionList, isCleared);
         mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(singleTestAdapter);
@@ -80,7 +75,6 @@ public class SingleTestActivity extends AppCompatActivity {
     }
 
     private void prepareData() {
-        final StringBuilder stringBuilder = new StringBuilder();
         postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,20 +85,13 @@ public class SingleTestActivity extends AppCompatActivity {
                         if (mTest != null && Objects.equals(mTest.getName(), testName)) {
                             DataSnapshot questions = test.child("questions");
                             for (DataSnapshot q : questions.getChildren()) {
-                                DataSnapshot options = q.child("options");
+                                //DataSnapshot options = q.child("options");
                                 Question mQuestion = q.getValue(Question.class);
                                 if (mQuestion != null) {
-                                    questionList.add(mQuestion.getText());
-                                }
-                                for (DataSnapshot o : options.getChildren()) {
-                                    String mOption = o.getValue(String.class);
-                                    if (mOption != null) {
-                                        stringBuilder.append(mOption).append(" ");
-                                    }
+                                   questionList.add(mQuestion);
                                 }
                             }
                         }
-                        optionsList.add(stringBuilder.toString());
                     }
                     singleTestAdapter.notifyDataSetChanged();
                 }
@@ -125,10 +112,13 @@ public class SingleTestActivity extends AppCompatActivity {
                         switch (item.getItemId()) {
                             case R.id.clear:
                                 singleTestAdapter.setIsCleared(true);
+                                singleTestAdapter.setIsChecked(false);
+                                singleTestAdapter.clearUserAnswer();
                                 singleTestAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.check:
-                                Toast.makeText(SingleTestActivity.this, "Your test is checked", Toast.LENGTH_SHORT).show();
+                                singleTestAdapter.checkTest();
+                                singleTestAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.go_to_rule:
                                 Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
@@ -147,18 +137,21 @@ public class SingleTestActivity extends AppCompatActivity {
             }
         });
         testNameView.setText(testName);
-        if (mRadioGroup != null) {
-            mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                    RadioButton radioButton = radioGroup.findViewById(i);
-                    if(!radioButton.getText().equals("a")) {
-                    radioButton.setBackgroundColor(getResources().getColor(R.color.red));
-                    }
-                }
-            });
-        }
 
+    }
+    public ColorStateList setColorStateList() {
+
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_checked},
+                new int[] {-android.R.attr.state_checked}
+        };
+
+        int[] colors = new int[] {
+                getResources().getColor(R.color.colorAccent),
+                getResources().getColor(R.color.colorPrimary),
+        };
+
+        return new ColorStateList(states, colors);
     }
 
 }

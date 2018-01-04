@@ -10,9 +10,9 @@ import java.util.HashMap;
  */
 public class Question {
     public String name;
-
     public HashMap<String,String> options;
     public String answer;
+    public String id;
     public String text;
 
     public Question() {
@@ -56,5 +56,13 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
