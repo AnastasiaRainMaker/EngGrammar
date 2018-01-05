@@ -13,9 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.anastasia.enggrammar.POJO.Question;
 import com.example.anastasia.enggrammar.POJO.Test;
+import com.example.anastasia.enggrammar.Room.AppDatabase;
 import com.example.anastasia.enggrammar.adapters.SingleTestAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +44,7 @@ public class SingleTestActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
+    private AppDatabase roomDatabase;
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class SingleTestActivity extends AppCompatActivity {
         mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(singleTestAdapter);
+        roomDatabase = AppDatabase.getDatabase(getApplicationContext());
         setUpViews();
         prepareData();
     }
@@ -71,6 +73,9 @@ public class SingleTestActivity extends AppCompatActivity {
         super.onStop();
         if(postListener != null) {
             mDatabase.removeEventListener(postListener);
+        }
+        if(roomDatabase != null) {
+            AppDatabase.destroyInstance();
         }
     }
 
@@ -83,12 +88,20 @@ public class SingleTestActivity extends AppCompatActivity {
                     for (DataSnapshot test : tests.getChildren()) {
                         Test mTest = test.getValue(Test.class);
                         if (mTest != null && Objects.equals(mTest.getName(), testName)) {
+//                            if (roomDatabase.testDao().findTestById(mTest.getId()).size() == 0) {
+//                                roomDatabase.testDao().insertTest(mTest);
+//                            }
                             DataSnapshot questions = test.child("questions");
                             for (DataSnapshot q : questions.getChildren()) {
-                                //DataSnapshot options = q.child("options");
                                 Question mQuestion = q.getValue(Question.class);
                                 if (mQuestion != null) {
-                                   questionList.add(mQuestion);
+                                    if (roomDatabase.questionDao().findQuestionById(mQuestion.getId()).size() == 0) {
+                                        Question newQuestion = new Question();
+                                        newQuestion.setId(mQuestion.getId());
+                                        newQuestion.setAnswer(mQuestion.getAnswer());
+                                        roomDatabase.questionDao().insertQuestion(newQuestion);
+                                    }
+                                 questionList.add(mQuestion);
                                 }
                             }
                         }
@@ -119,6 +132,7 @@ public class SingleTestActivity extends AppCompatActivity {
                             case R.id.check:
                                 singleTestAdapter.checkTest();
                                 singleTestAdapter.notifyDataSetChanged();
+                                singleTestAdapter.displayTestResult();
                                 break;
                             case R.id.go_to_rule:
                                 Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);

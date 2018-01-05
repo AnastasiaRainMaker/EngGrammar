@@ -1,4 +1,4 @@
-package com.example.anastasia.enggrammar.RecyclerDividers;
+package com.example.anastasia.enggrammar.recyclerDividers;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;

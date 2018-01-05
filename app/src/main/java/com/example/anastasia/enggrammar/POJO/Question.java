@@ -1,29 +1,45 @@
 package com.example.anastasia.enggrammar.POJO;
 
-import android.app.VoiceInteractor;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by anastasia on 12/25/17.
  */
+@Entity(tableName = "question")
 public class Question {
+    @Ignore
     public String name;
+
+    @Ignore
     public HashMap<String,String> options;
+
     public String answer;
+
+    public String uAnswer;
+
+    @PrimaryKey
+    @NonNull
     public String id;
+
+    @Ignore
     public String text;
 
     public Question() {
 
     }
 
-    public Question(String name, String answer, HashMap<String,String> options, String text){
+    public Question(String name, String answer, HashMap<String,String> options, String text, String id, String uAnswer){
         this.answer = answer;
         this.name = name;
         this.text = text;
         this.options = options;
+        this.id = id;
+        this.uAnswer = uAnswer;
     }
     public HashMap<String, String> getOptions() {
         return options;
@@ -58,11 +74,20 @@ public class Question {
         this.answer = answer;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getuAnswer() {
+        return uAnswer;
+    }
+
+    public void setuAnswer(String uAnswer) {
+        this.uAnswer = uAnswer;
     }
 }

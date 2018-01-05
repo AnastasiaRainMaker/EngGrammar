@@ -34,6 +34,8 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
     public ArrayList<Boolean> isCorrect = new ArrayList<>();
     public boolean isChecked = false;
     public ColorStateList mList;
+    public int count1;
+    public int count2;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -76,7 +78,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         }
 
         for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
-            holder.radioGroup.getChildAt(i).setEnabled(true);
+            holder.radioGroup.getChildAt(i).setClickable(true);
             ((RadioButton) holder.radioGroup.getChildAt(i)).setText(optionList.get(i));
         }
 
@@ -87,7 +89,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
             }
         }
 
-        optionList.clear();
+         optionList.clear();
          holder.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -106,6 +108,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
         if (isChecked) {
             if (!isCorrect.get(position)) {
+                count1++;
                 int selectedId = holder.radioGroup.getCheckedRadioButtonId();
                 RadioButton rButton = holder.radioGroup.findViewById(selectedId);
                 rButton.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.red)));
@@ -116,12 +119,14 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
                    }
                 }
             } else {
+                count2++;
                 int selectedId = holder.radioGroup.getCheckedRadioButtonId();
                 RadioButton rButton = holder.radioGroup.findViewById(selectedId);
                 rButton.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.colorAccent)));
             }
+
             for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
-                holder.radioGroup.getChildAt(i).setEnabled(false);
+                holder.radioGroup.getChildAt(i).setClickable(false);
             }
         }
         if (position == questionList.size()-1) {
@@ -130,7 +135,16 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
     }
 
+    public void displayTestResult() {
+        if (!isCorrect.contains(false)) {
+            Toast.makeText(mActivity, "Все ответы правильные", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mActivity, "В тесте " + count2 + " правильных ответов и " + count1 + " неправильных", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void checkTest() {
+        isCorrect.clear();
         if (uAnswerList.size() != questionList.size()) {
             Toast.makeText(mActivity, "Необходимо ответить на все вопросы", Toast.LENGTH_SHORT).show();
         } else {

@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anastasia.enggrammar.POJO.Topic;
-import com.example.anastasia.enggrammar.RecyclerDividers.SimpleDividerItemDecorationWhite;
+import com.example.anastasia.enggrammar.recyclerDividers.SimpleDividerItemDecorationWhite;
 import com.example.anastasia.enggrammar.adapters.TestsAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
