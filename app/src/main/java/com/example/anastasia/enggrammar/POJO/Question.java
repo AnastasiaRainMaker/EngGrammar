@@ -18,6 +18,13 @@ public class Question {
     @Ignore
     public HashMap<String,String> options;
 
+    @Ignore
+    public Boolean checked = false;
+
+    @Ignore
+
+    public Boolean cleared = false;
+
     public String answer;
 
     public String uAnswer;
@@ -41,6 +48,23 @@ public class Question {
         this.id = id;
         this.uAnswer = uAnswer;
     }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
+
+    public Boolean getCleared() {
+        return cleared;
+    }
+
+    public void setCleared(Boolean cleared) {
+        this.cleared = cleared;
+    }
+
     public HashMap<String, String> getOptions() {
         return options;
     }

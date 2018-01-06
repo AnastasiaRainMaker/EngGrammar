@@ -40,16 +40,17 @@ public class SingleTestActivity extends AppCompatActivity {
     SingleTestAdapter singleTestAdapter;
     List<Question> questionList = new ArrayList<>();
     RecyclerView.LayoutManager mRecyclerManager;
-    Boolean isCleared;
     BottomNavigationView bottomNavigationView;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
     private AppDatabase roomDatabase;
+    Boolean isChecked;
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_test);
+        isChecked = false;
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
         topicName = getIntent().getStringExtra("topicName");
@@ -57,8 +58,7 @@ public class SingleTestActivity extends AppCompatActivity {
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         testNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_test_content);
-        isCleared = false;
-        singleTestAdapter = new SingleTestAdapter(this, questionList, isCleared);
+        singleTestAdapter = new SingleTestAdapter(this, questionList);
         mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(singleTestAdapter);
@@ -106,6 +106,7 @@ public class SingleTestActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    singleTestAdapter.setuAnswerListSize(questionList.size());
                     singleTestAdapter.notifyDataSetChanged();
                 }
             }
@@ -124,15 +125,21 @@ public class SingleTestActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.clear:
-                                singleTestAdapter.setIsCleared(true);
-                                singleTestAdapter.setIsChecked(false);
+                                singleTestAdapter.setCleared(true);
+                                singleTestAdapter.setChecked(false);
                                 singleTestAdapter.clearUserAnswer();
                                 singleTestAdapter.notifyDataSetChanged();
+                                setIsChecked(false);
                                 break;
                             case R.id.check:
-                                singleTestAdapter.checkTest();
-                                singleTestAdapter.notifyDataSetChanged();
-                                singleTestAdapter.displayTestResult();
+                                if (!isChecked) {
+                                    singleTestAdapter.setChecked(true);
+                                   // singleTestAdapter.setCleared(false);
+                                    if (singleTestAdapter.checkTest()) {
+                                        singleTestAdapter.notifyDataSetChanged();
+                                    }
+                                    //singleTestAdapter.displayTestResult();
+                                }
                                 break;
                             case R.id.go_to_rule:
                                 Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
@@ -166,6 +173,10 @@ public class SingleTestActivity extends AppCompatActivity {
         };
 
         return new ColorStateList(states, colors);
+    }
+
+    public void setIsChecked(Boolean value) {
+        isChecked = value;
     }
 
 }
