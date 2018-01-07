@@ -25,4 +25,7 @@ public interface TestDao {
 
     @Query("SELECT * FROM test WHERE id LIKE :firebaseId")
     List<Test> findTestById(String firebaseId);
+
+    @Query("UPDATE test SET checkedTest = :value WHERE id = :id")
+    void updateCheckedTest (Boolean value, String id);
 }

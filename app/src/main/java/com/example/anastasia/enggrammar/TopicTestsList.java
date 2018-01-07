@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Test;
+import com.example.anastasia.enggrammar.Room.AppDatabase;
 import com.example.anastasia.enggrammar.recyclerDividers.SimpleDividerItemDecorationBlue;
 import com.example.anastasia.enggrammar.adapters.TopicTestListAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -25,13 +26,14 @@ import java.util.List;
 
 public class TopicTestsList extends AppCompatActivity implements TopicTestListAdapter.OnItemClicked {
     RecyclerView mRecycler;
-    List<String> testList = new ArrayList<>();
+    List<Test> testList = new ArrayList<>();
     TopicTestListAdapter topicTestListAdapter;
     ImageView arrowBack;
     TextView topicNameView;
     String topicName;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
+    private AppDatabase roomDatabase;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +42,12 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
         topicNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_topic_test_list);
-        topicTestListAdapter = new TopicTestListAdapter(testList);
+        topicTestListAdapter = new TopicTestListAdapter(this, testList);
         RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(topicTestListAdapter);
         arrowBack = findViewById(R.id.arrow_back_toolbar);
+        roomDatabase = AppDatabase.getDatabase(getApplicationContext());
         setUpViews();
         prepareTestList();
     }
@@ -58,7 +61,7 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
                   for (DataSnapshot test : tests.getChildren()){
                     Test mTest = test.getValue(Test.class);
                     if(mTest != null) {
-                        testList.add(mTest.getName());
+                        testList.add(mTest);
                         topicTestListAdapter.notifyDataSetChanged();
                     }
                   }
@@ -85,17 +88,35 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
         topicTestListAdapter.setOnClick(this);
     }
 
+    public boolean isTestChecked(String id) {
+        List<Test> tests = roomDatabase.testDao().findTestById(id);
+        if (tests.size() > 0 && tests.get(0).isCheckedTest()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        topicTestListAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         if(postListener != null) {
             mDatabase.removeEventListener(postListener);
         }
+        if(roomDatabase != null) {
+            AppDatabase.destroyInstance();
+        }
     }
 
     @Override
     public void onItemClick(int position) {
-        String testNumber = testList.get(position);
+        String testNumber = testList.get(position).getName();
         Intent i = new Intent(getApplicationContext(), SingleTestActivity.class);
         i.putExtra("testNumber", testNumber);
         i.putExtra("topicName", topicName);

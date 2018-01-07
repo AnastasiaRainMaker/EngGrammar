@@ -34,10 +34,8 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
     SingleTestActivity mActivity = new SingleTestActivity();
     public ArrayList<Boolean> isCorrect = new ArrayList<>();
     public ColorStateList mList;
-    public int count1;
-    public int count2;
     public View.OnClickListener onClickListener;
-    int size;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView questionView;
@@ -51,7 +49,6 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
         }
     }
-
 
     public SingleTestAdapter(SingleTestActivity mActivity, List<Question> questionList) {
         this.questionList = questionList;
@@ -84,6 +81,9 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
                 RadioButton radioButton = (RadioButton) view;
                 radioButton.setChecked(true);
                 uAnswerList[position] = radioButton.getText().toString();
+                if (uAnswerList[position] != null) {
+                    mActivity.writeToRoom(questionList.get(position).getId(), uAnswerList[position]);
+                }
             }
         };
 
@@ -97,12 +97,25 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
         if (questionList.get(position).getCleared()) {
             holder.radioGroup.clearCheck();
+            mActivity.deleteFromRoom(null, questionList.get(position).getId());
+            mActivity.updateCheckedRoom(false, questionList.get(position).getId());
             for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
                 ((RadioButton) holder.radioGroup.getChildAt(i)).setButtonTintList(mList);
             }
         }
 
+        if (mActivity.checkRoom(questionList.get(position).getId())) {
+            mActivity.setIsChecked(true);
+            questionList.get(position).setChecked(true);
+            uAnswerList[position] = mActivity.readFromRoom(questionList.get(position).getId());
+            // disableRadioG(holder);
+        }
+
         if (questionList.get(position).getChecked()) {
+             if(!mActivity.checkRoom(questionList.get(position).getId())) {
+                mActivity.updateCheckedRoom(true, questionList.get(position).getId());
+             }
+
              for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
                    if ( ((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
                            && !Objects.equals(uAnswerList[position], rAnswerList.get(position))){
@@ -124,18 +137,13 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
                        nBtn.setChecked(true);
                    }
              }
-
-            for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
-                holder.radioGroup.getChildAt(i).setClickable(false);
-            }
-        }
+            disableRadioG(holder);
+       }
     }
 
     public void displayTestResult() {
         if (!isCorrect.contains(false) && isCorrect.size() == questionList.size()) {
             Toast.makeText(mActivity, "Все ответы правильные", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(mActivity, "В тесте " + count2 + " правильных ответов и " + count1 + " неправильных", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -149,7 +157,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         return false;
         } else {
             mActivity.setIsChecked(true);
-            for (int i = 0; i < uAnswerList.length; i++) {
+             for (int i = 0; i < uAnswerList.length; i++) {
                 if (!rAnswerList.get(i).equals(uAnswerList[i])) {
                     if(isCorrect.size() > i) {
                         isCorrect.set(i, false);
@@ -192,5 +200,11 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
     public void setuAnswerListSize(int size) {
        uAnswerList = new String[size];
+    }
+
+    private void disableRadioG(MyViewHolder holder) {
+        for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
+            holder.radioGroup.getChildAt(i).setClickable(false);
+        }
     }
 }

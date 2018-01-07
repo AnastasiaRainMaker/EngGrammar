@@ -36,4 +36,7 @@ public interface QuestionDao {
 
     @Query("UPDATE question SET uAnswer = :uAnswer WHERE id = :id")
     void updateQuestion (String uAnswer, String id);
+
+    @Query("UPDATE question SET checked = :checked WHERE id = :id")
+    void updateChecked (Boolean checked, String id);
 }

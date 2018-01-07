@@ -45,6 +45,8 @@ public class SingleTestActivity extends AppCompatActivity {
     ValueEventListener postListener;
     private AppDatabase roomDatabase;
     Boolean isChecked;
+    Test newTest;
+    String testId;
 
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,9 +90,15 @@ public class SingleTestActivity extends AppCompatActivity {
                     for (DataSnapshot test : tests.getChildren()) {
                         Test mTest = test.getValue(Test.class);
                         if (mTest != null && Objects.equals(mTest.getName(), testName)) {
-//                            if (roomDatabase.testDao().findTestById(mTest.getId()).size() == 0) {
-//                                roomDatabase.testDao().insertTest(mTest);
-//                            }
+                            if (roomDatabase.testDao().findTestById(mTest.getId()).size() == 0) {
+                                testId = mTest.getId();
+                                newTest = new Test();
+                                newTest.setId(testId);
+                                newTest.setCheckedTest(false);
+                                roomDatabase.testDao().insertTest(newTest);
+                            } else {
+                                testId = roomDatabase.testDao().findTestById(mTest.getId()).get(0).getId();
+                            }
                             DataSnapshot questions = test.child("questions");
                             for (DataSnapshot q : questions.getChildren()) {
                                 Question mQuestion = q.getValue(Question.class);
@@ -99,9 +107,10 @@ public class SingleTestActivity extends AppCompatActivity {
                                         Question newQuestion = new Question();
                                         newQuestion.setId(mQuestion.getId());
                                         newQuestion.setAnswer(mQuestion.getAnswer());
+                                        newQuestion.setChecked(false);
                                         roomDatabase.questionDao().insertQuestion(newQuestion);
                                     }
-                                 questionList.add(mQuestion);
+                                     questionList.add(mQuestion);
                                 }
                             }
                         }
@@ -130,15 +139,16 @@ public class SingleTestActivity extends AppCompatActivity {
                                 singleTestAdapter.clearUserAnswer();
                                 singleTestAdapter.notifyDataSetChanged();
                                 setIsChecked(false);
+                                roomDatabase.testDao().updateCheckedTest(false, testId);
                                 break;
                             case R.id.check:
                                 if (!isChecked) {
                                     singleTestAdapter.setChecked(true);
-                                   // singleTestAdapter.setCleared(false);
                                     if (singleTestAdapter.checkTest()) {
                                         singleTestAdapter.notifyDataSetChanged();
+                                        singleTestAdapter.displayTestResult();
+                                        roomDatabase.testDao().updateCheckedTest(true, testId);
                                     }
-                                    //singleTestAdapter.displayTestResult();
                                 }
                                 break;
                             case R.id.go_to_rule:
@@ -177,6 +187,44 @@ public class SingleTestActivity extends AppCompatActivity {
 
     public void setIsChecked(Boolean value) {
         isChecked = value;
+    }
+
+    public void writeToRoom(String id, String uAnswer) {
+        if (roomDatabase != null) {
+           List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
+           for (Question question : foundQ) {
+               question.setuAnswer(uAnswer);
+               question.setChecked(true);
+           }
+           roomDatabase.questionDao().updateQuestion(uAnswer, id);
+        }
+    }
+
+    public boolean checkRoom(String id) {
+        if (roomDatabase != null) {
+            List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
+            if (foundQ.size() > 0) {
+                return foundQ.get(0).getChecked();
+            }
+        }
+        return false;
+    }
+
+    public String readFromRoom(String id) {
+        String uAnswer = null;
+        if (roomDatabase != null) {
+            List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
+            uAnswer = foundQ.get(0).getuAnswer();
+        }
+        return uAnswer;
+    }
+
+    public void  updateCheckedRoom(Boolean value, String id) {
+        roomDatabase.questionDao().updateChecked(value, id);
+    }
+
+    public void deleteFromRoom(String uAnswer, String id) {
+        roomDatabase.questionDao().updateQuestion(uAnswer, id);
     }
 
 }

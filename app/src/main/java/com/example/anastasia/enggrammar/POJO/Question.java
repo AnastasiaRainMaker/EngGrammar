@@ -19,11 +19,10 @@ public class Question {
     public HashMap<String,String> options;
 
     @Ignore
-    public Boolean checked = false;
-
-    @Ignore
 
     public Boolean cleared = false;
+
+    public Boolean checked = false;
 
     public String answer;
 
@@ -40,7 +39,8 @@ public class Question {
 
     }
 
-    public Question(String name, String answer, HashMap<String,String> options, String text, String id, String uAnswer){
+    public Question(String name, String answer, HashMap<String,String> options, String text, @NonNull String id, String uAnswer, Boolean checked){
+        this.checked = checked;
         this.answer = answer;
         this.name = name;
         this.text = text;

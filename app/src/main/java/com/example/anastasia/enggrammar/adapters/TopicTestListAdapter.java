@@ -1,18 +1,12 @@
 package com.example.anastasia.enggrammar.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.R;
-import com.example.anastasia.enggrammar.SingleTestActivity;
-import com.example.anastasia.enggrammar.TopicGrActivity;
 import com.example.anastasia.enggrammar.TopicTestsList;
 
 import java.util.List;
@@ -23,8 +17,9 @@ import java.util.List;
 
 public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdapter.MyViewHolder> {
 
-    private List<String> testList;
+    private List<Test> testList;
     private OnItemClicked onClick;
+    private TopicTestsList mActivity;
 
     public interface OnItemClicked {
         void onItemClick(int position);
@@ -40,7 +35,8 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         }
     }
 
-    public TopicTestListAdapter(List<String> testList) {
+    public TopicTestListAdapter(TopicTestsList mActivity, List<Test> testList) {
+        this.mActivity = mActivity;
         this.testList = testList;
     }
 
@@ -54,7 +50,12 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final String testNumber = testList.get(position);
+        final String testNumber = testList.get(position).getName();
+        if (mActivity.isTestChecked(testList.get(position).getId())) {
+            holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+        } else {
+            holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
+        }
         holder.name.setText(testNumber);
         holder.name.setOnClickListener(new View.OnClickListener(){
             @Override

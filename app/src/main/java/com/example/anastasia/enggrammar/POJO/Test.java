@@ -18,12 +18,18 @@ public class Test {
     @NonNull
     public String id;
 
+    public boolean checkedTest;
+
     public Test() {
 
     }
-    public Test(String name){
 
+    public Test(String name, String id, boolean checkedTest){
+
+        this.id = id;
+        this.checkedTest = checkedTest;
         this.name = name;
+
     }
 
     public String getName() {
@@ -42,5 +48,12 @@ public class Test {
         this.id = id;
     }
 
+    public boolean isCheckedTest() {
+        return checkedTest;
+    }
+
+    public void setCheckedTest(boolean checkedTest) {
+        this.checkedTest = checkedTest;
+    }
 
 }
