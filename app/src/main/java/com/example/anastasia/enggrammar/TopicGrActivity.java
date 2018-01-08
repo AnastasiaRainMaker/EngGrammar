@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -78,6 +79,7 @@ public class TopicGrActivity extends AppCompatActivity {
 
     private void setUpViews() {
         description.setMovementMethod(new ScrollingMovementMethod());
+        description.setMovementMethod(LinkMovementMethod.getInstance());
         topicNameView.setText(topicName);
         goToTestsBtn.setOnClickListener(new View.OnClickListener() {
             @Override

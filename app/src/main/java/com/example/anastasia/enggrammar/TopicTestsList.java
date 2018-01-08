@@ -33,10 +33,12 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     String topicName;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
+    Boolean fromTests;
     private AppDatabase roomDatabase;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fromTests = getIntent().getBooleanExtra("fromTests", false);
         topicName = getIntent().getStringExtra("testName");
         setContentView(R.layout.activity_topic_test_list);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
@@ -126,9 +128,15 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-        i.putExtra("topicName", topicName);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
+        if(!fromTests) {
+            Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
+            i.putExtra("topicName", topicName);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        }
     }
 }

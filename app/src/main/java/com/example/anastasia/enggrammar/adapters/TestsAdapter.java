@@ -49,12 +49,14 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final String test = testsList.get(position);
+        final Boolean fromTests = true;
         holder.name.setText(test);
         holder.mLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
                 Intent i = new Intent(context, TopicTestsList.class);
+                i.putExtra("fromTests",fromTests);
                 i.putExtra("testName", test);
                 context.startActivity(i);
             }
