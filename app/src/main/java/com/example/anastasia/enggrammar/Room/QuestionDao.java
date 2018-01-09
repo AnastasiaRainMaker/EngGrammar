@@ -9,6 +9,8 @@ import android.arch.persistence.room.Query;
 import com.example.anastasia.enggrammar.POJO.Question;
 import java.util.List;
 
+import io.reactivex.Single;
+
 
 /**
  * Created by anastasia on 1/5/18.
@@ -19,19 +21,10 @@ public interface QuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(Question... questions);
 
-    @Delete
-    void deleteQuestion(Question... questions);
-
     @Query("SELECT id FROM question")
     String getId();
 
-    @Query("SELECT answer FROM question WHERE id LIKE :questionId")
-    String getrAnswer(String questionId);
-
-    @Query("SELECT uAnswer FROM question WHERE id LIKE :questionId")
-    String getuAnswer(String questionId);
-
-    @Query("SELECT * FROM question WHERE id LIKE :firebaseId")
+    @Query("SELECT * FROM question WHERE id LIKE :firebaseId LIMIT 1")
     List<Question> findQuestionById(String firebaseId);
 
     @Query("UPDATE question SET uAnswer = :uAnswer WHERE id = :id")

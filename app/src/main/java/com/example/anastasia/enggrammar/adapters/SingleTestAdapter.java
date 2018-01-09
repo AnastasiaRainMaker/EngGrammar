@@ -69,21 +69,20 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         final Question question = questionList.get(position);
         final HashMap<String, String> map = questionList.get(position).getOptions();
         holder.questionView.setText(question.getText());
-        rAnswerList.add(question.getAnswer());
+        if (rAnswerList.size() != questionList.size()) {
+            rAnswerList.add(question.getAnswer());
+        }
 
         for (Map.Entry entry : map.entrySet()) {
              optionList.add(entry.getValue().toString());
 
         }
-        onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RadioButton radioButton = (RadioButton) view;
-                radioButton.setChecked(true);
-                uAnswerList[position] = radioButton.getText().toString();
-                if (uAnswerList[position] != null) {
-                    mActivity.writeToRoom(questionList.get(position).getId(), uAnswerList[position]);
-                }
+        onClickListener = view -> {
+            RadioButton radioButton = (RadioButton) view;
+            radioButton.setChecked(true);
+            uAnswerList[position] = radioButton.getText().toString();
+            if (uAnswerList[position] != null) {
+                mActivity.writeToRoom(questionList.get(position).getId(), uAnswerList[position]);
             }
         };
 
@@ -107,38 +106,44 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         if (mActivity.checkRoom(questionList.get(position).getId())) {
             mActivity.setIsChecked(true);
             questionList.get(position).setChecked(true);
-            uAnswerList[position] = mActivity.readFromRoom(questionList.get(position).getId());
-            // disableRadioG(holder);
+            if(uAnswerList[position] == null)
+            mActivity.readFromRoom(questionList.get(position).getId(), position);
+
         }
 
         if (questionList.get(position).getChecked()) {
-             if(!mActivity.checkRoom(questionList.get(position).getId())) {
+            if (!mActivity.checkRoom(questionList.get(position).getId())) {
                 mActivity.updateCheckedRoom(true, questionList.get(position).getId());
-             }
+            }
+            for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
+                    if (!((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
+                            && !((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(uAnswerList[position])) {
 
-             for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
-                   if ( ((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
-                           && !Objects.equals(uAnswerList[position], rAnswerList.get(position))){
+                        RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
+                        nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.colorPrimary)));
+                    }
+                    if (((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
+                            && !Objects.equals(uAnswerList[position], rAnswerList.get(position))) {
 
-                       RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
-                       nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.colorAccent)));
-                   }
-                    if ( ((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
-                        && Objects.equals(uAnswerList[position], rAnswerList.get(position))){
+                        RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
+                        nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.colorAccent)));
+                    }
+                    if (((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(rAnswerList.get(position))
+                            && Objects.equals(uAnswerList[position], rAnswerList.get(position))) {
 
                         RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
                         nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.colorAccent)));
                         nBtn.setChecked(true);
                     }
-                   if (((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(uAnswerList[position])
-                           && !Objects.equals(uAnswerList[position], rAnswerList.get(position))){
-                       RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
-                       nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.red)));
-                       nBtn.setChecked(true);
-                   }
-             }
-            disableRadioG(holder);
-       }
+                    if (((RadioButton) holder.radioGroup.getChildAt(i)).getText().equals(uAnswerList[position])
+                            && !Objects.equals(uAnswerList[position], rAnswerList.get(position))) {
+                        RadioButton nBtn = (RadioButton) holder.radioGroup.getChildAt(i);
+                        nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.red)));
+                        nBtn.setChecked(true);
+                    }
+                }
+                disableRadioG(holder);
+            }
     }
 
     public void displayTestResult() {
@@ -206,5 +211,11 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
             holder.radioGroup.getChildAt(i).setClickable(false);
         }
+    }
+
+    public void setUAnswerFromRoom(String uAnswer, int position){
+        uAnswerList[position] = uAnswer;
+        notifyItemChanged(position);
+
     }
 }

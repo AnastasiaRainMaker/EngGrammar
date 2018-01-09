@@ -9,6 +9,8 @@ import com.example.anastasia.enggrammar.POJO.Test;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 /**
  * Created by anastasia on 1/5/18.
  */
@@ -23,7 +25,7 @@ public interface TestDao {
     @Query("SELECT * FROM test")
     List<Test> loadAllTests();
 
-    @Query("SELECT * FROM test WHERE id LIKE :firebaseId")
+    @Query("SELECT * FROM test WHERE id LIKE :firebaseId LIMIT 1")
     List<Test> findTestById(String firebaseId);
 
     @Query("UPDATE test SET checkedTest = :value WHERE id = :id")

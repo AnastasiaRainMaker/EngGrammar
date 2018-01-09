@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.AsyncLayoutInflater;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,12 +28,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anastasia on 12/27/17.
  */
 
-public class SingleTestActivity extends AppCompatActivity {
+public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJava.OnFinishedListener {
     ImageView arrowBack;
     TextView testNameView;
     String testName;
@@ -47,7 +58,7 @@ public class SingleTestActivity extends AppCompatActivity {
     Boolean isChecked;
     Test newTest;
     String testId;
-
+    private CompositeDisposable mSubscriptions;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +76,7 @@ public class SingleTestActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(singleTestAdapter);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
+        mSubscriptions = new CompositeDisposable();
         setUpViews();
         prepareData();
     }
@@ -73,13 +85,17 @@ public class SingleTestActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(postListener != null) {
+        if (postListener != null) {
             mDatabase.removeEventListener(postListener);
         }
-        if(roomDatabase != null) {
+        if (roomDatabase != null) {
             AppDatabase.destroyInstance();
         }
+        if (mSubscriptions != null && !mSubscriptions.isDisposed()) {
+            mSubscriptions.dispose();
+        }
     }
+
 
     private void prepareData() {
         postListener = new ValueEventListener() {
@@ -137,9 +153,9 @@ public class SingleTestActivity extends AppCompatActivity {
                                 singleTestAdapter.setCleared(true);
                                 singleTestAdapter.setChecked(false);
                                 singleTestAdapter.clearUserAnswer();
-                                singleTestAdapter.notifyDataSetChanged();
-                                setIsChecked(false);
                                 roomDatabase.testDao().updateCheckedTest(false, testId);
+                                setIsChecked(false);
+                                singleTestAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.check:
                                 if (!isChecked) {
@@ -210,13 +226,10 @@ public class SingleTestActivity extends AppCompatActivity {
         return false;
     }
 
-    public String readFromRoom(String id) {
-        String uAnswer = null;
-        if (roomDatabase != null) {
-            List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
-            uAnswer = foundQ.get(0).getuAnswer();
-        }
-        return uAnswer;
+    public void readFromRoom(String id, int position) {
+         //positionAdapter = position;
+         mSubscriptions.add(readWithRX(this, id, position));
+
     }
 
     public void  updateCheckedRoom(Boolean value, String id) {
@@ -227,4 +240,25 @@ public class SingleTestActivity extends AppCompatActivity {
         roomDatabase.questionDao().updateQuestion(uAnswer, id);
     }
 
+    public Disposable readWithRX(final OnFinishedListener listener, String id, int position) {
+       return Single.fromCallable (() -> roomDatabase.questionDao().findQuestionById(id))
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(
+                       res -> {
+                           singleTestAdapter.setUAnswerFromRoom(res.get(0).getuAnswer(), position);
+                       },
+                       throwable -> listener.onError(throwable.getMessage())
+               );
+    }
+
+    @Override
+    public void onFinished(String uAnswer,int position) {
+
+    }
+
+    @Override
+    public void onError(String message) {
+        Log.e("rxJava failed", message);
+    }
 }
