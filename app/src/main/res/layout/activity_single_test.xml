@@ -32,13 +32,30 @@
             />
 
     </android.support.v7.widget.Toolbar>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_test_content"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:background="@null"
-        android:layout_weight="1"
         android:layout_height="0dp"
-       />
+        android:background="@android:color/transparent"
+        android:layout_weight="1"
+        >
+
+        <ProgressBar
+
+            android:id="@+id/progress_single_test"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorPrimary"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_test_content"
+            android:layout_width="match_parent"
+            android:background="@null"
+            android:layout_height="match_parent"
+            />
+
+
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -49,36 +66,5 @@
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_navigation_main" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/go_to_rule"-->
-        <!--android:clickable="true"-->
-        <!--android:focusable="true"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:text="@string/go_to_rule"-->
-        <!--android:gravity="center_horizontal"/>-->
-
-    <!--<Button-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:id="@+id/check"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_width="340dp"-->
-        <!--android:text="@string/check"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:background="@drawable/button_selector"/>-->
-    <!--<TextView-->
-        <!--android:id="@+id/clear_filled"-->
-        <!--android:clickable="true"-->
-        <!--android:focusable="true"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:text="@string/clear_filled"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--/>-->
 
 </LinearLayout>

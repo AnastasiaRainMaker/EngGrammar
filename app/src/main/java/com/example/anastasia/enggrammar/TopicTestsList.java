@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.Room.AppDatabase;
@@ -19,6 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anastasia on 12/26/17.
@@ -34,7 +42,9 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     DatabaseReference mDatabase;
     ValueEventListener postListener;
     Boolean fromTests;
+    ProgressBar progressBar;
     private AppDatabase roomDatabase;
+    private CompositeDisposable mSubscriptions;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +60,14 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
         mRecycler.setAdapter(topicTestListAdapter);
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
+        progressBar = findViewById(R.id.progress_test_list);
+        mSubscriptions = new CompositeDisposable();
         setUpViews();
         prepareTestList();
     }
 
     private void prepareTestList() {
-        postListener = new ValueEventListener() {
+         postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
@@ -64,9 +76,11 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
                     Test mTest = test.getValue(Test.class);
                     if(mTest != null) {
                         testList.add(mTest);
-                        topicTestListAdapter.notifyDataSetChanged();
                     }
                   }
+                   topicTestListAdapter.setTestCheckedSize(testList.size());
+                   topicTestListAdapter.notifyDataSetChanged();
+                   //progressBar.setVisibility(View.GONE);
                 }
             }
 
@@ -79,30 +93,40 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     }
 
     private void setUpViews() {
+        progressBar.setVisibility(View.VISIBLE);
         mRecycler.addItemDecoration(new SimpleDividerItemDecorationBlue(getResources()));
-        arrowBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        arrowBack.setOnClickListener(view -> onBackPressed());
         topicNameView.setText(topicName);
         topicTestListAdapter.setOnClick(this);
     }
 
-    public boolean isTestChecked(String id) {
-        List<Test> tests = roomDatabase.testDao().findTestById(id);
-        if (tests.size() > 0 && tests.get(0).isCheckedTest()) {
-            return true;
-        } else {
-            return false;
-        }
+    public void isTestChecked(String id, int position) {
+        mSubscriptions.add(readWithRX(id, position));
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public Disposable readWithRX(String id, int position) {
+        return Single.fromCallable (() -> roomDatabase.testDao().findTestById(id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        res -> {
+                            if (res.size() > 0 && res.get(0).isCheckedTest()) {
+                                topicTestListAdapter.setTestChecked(true, position);
+                            } else {
+                                topicTestListAdapter.setTestChecked(false, position);
+                            }
+                            topicTestListAdapter.notifyItemChanged(position);
+
+                        },
+                        throwable -> Log.e( "rxjava", "rxjava testlist threw error")
+                );
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        topicTestListAdapter.notifyDataSetChanged();
+        topicTestListAdapter.clearTestChecked();
     }
 
     @Override
@@ -113,6 +137,9 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
         }
         if(roomDatabase != null) {
             AppDatabase.destroyInstance();
+        }
+        if (mSubscriptions != null && !mSubscriptions.isDisposed()) {
+            mSubscriptions.clear();
         }
     }
 
@@ -139,4 +166,10 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
             startActivity(i);
         }
     }
+
+    public void hideProgress(int position) {
+        if (position == testList.size()-1) progressBar.setVisibility(View.GONE);
+    }
+
+
 }

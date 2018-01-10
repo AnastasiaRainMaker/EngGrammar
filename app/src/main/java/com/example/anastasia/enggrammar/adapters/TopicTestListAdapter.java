@@ -9,6 +9,7 @@ import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.R;
 import com.example.anastasia.enggrammar.TopicTestsList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
     private List<Test> testList;
     private OnItemClicked onClick;
     private TopicTestsList mActivity;
+    private Boolean[] testChecked;
 
     public interface OnItemClicked {
         void onItemClick(int position);
@@ -51,18 +53,18 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         final String testNumber = testList.get(position).getName();
-        if (mActivity.isTestChecked(testList.get(position).getId())) {
-            holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+        if (testChecked[position] == null) {
+            mActivity.isTestChecked(testList.get(position).getId(), position);
         } else {
-            holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
+            if (testChecked[position]) {
+                holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+            } else {
+                holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
+            }
+           mActivity.hideProgress(position);
         }
         holder.name.setText(testNumber);
-        holder.name.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                onClick.onItemClick(position);
-            }
-        });
+        holder.name.setOnClickListener(view -> onClick.onItemClick(position));
     }
 
     @Override
@@ -72,5 +74,22 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     public void setOnClick(OnItemClicked onClick) {
         this.onClick=onClick;
+    }
+
+    public void setTestCheckedSize(int size) {
+        testChecked = new Boolean[size];
+    }
+
+    public  void setTestChecked(Boolean value, int position) {
+        testChecked[position] = value;
+    }
+
+    public void clearTestChecked() {
+        if (testChecked != null) {
+            for (int i = 0; i < testChecked.length; i++) {
+                testChecked[i] = null;
+            }
+            notifyDataSetChanged();
+        }
     }
 }

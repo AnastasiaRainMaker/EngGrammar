@@ -14,6 +14,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Topic;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +35,7 @@ public class TopicGrActivity extends AppCompatActivity {
     DatabaseReference mDatabase;
     ValueEventListener postListener;
     TextView description;
+    ProgressBar progressBar;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +47,13 @@ public class TopicGrActivity extends AppCompatActivity {
         goToTestsBtn = findViewById(R.id.go_to_tests);
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         description = findViewById(R.id.topic_description);
+        progressBar = findViewById(R.id.progress_topic);
         setUpViews();
         loadData();
     }
 
     private void loadData() {
+        progressBar.setVisibility(View.VISIBLE);
         postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -60,10 +64,12 @@ public class TopicGrActivity extends AppCompatActivity {
                             String spannableString = new SpannableString(Html.fromHtml(topic.getDescription(), Html.FROM_HTML_MODE_LEGACY)).toString();
                             Spanned spanned = Html.fromHtml(spannableString, Html.FROM_HTML_MODE_LEGACY);
                             description.setText(spanned, TextView.BufferType.SPANNABLE);
+                            progressBar.setVisibility(View.GONE);
                         } else {
                             String spannableString = new SpannableString(Html.fromHtml(topic.getDescription())).toString();
                             Spanned spanned = Html.fromHtml(spannableString);
                             description.setText(spanned, TextView.BufferType.SPANNABLE);
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 }

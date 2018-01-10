@@ -3,17 +3,15 @@ package com.example.anastasia.enggrammar;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.view.AsyncLayoutInflater;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Question;
 import com.example.anastasia.enggrammar.POJO.Test;
@@ -28,14 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -58,6 +52,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
     Boolean isChecked;
     Test newTest;
     String testId;
+    ProgressBar progress;
     private CompositeDisposable mSubscriptions;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +72,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
         mRecycler.setAdapter(singleTestAdapter);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
         mSubscriptions = new CompositeDisposable();
+        progress = findViewById(R.id.progress_single_test);
         setUpViews();
         prepareData();
     }
@@ -92,7 +88,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
             AppDatabase.destroyInstance();
         }
         if (mSubscriptions != null && !mSubscriptions.isDisposed()) {
-            mSubscriptions.dispose();
+            mSubscriptions.clear();
         }
     }
 
@@ -133,6 +129,8 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                     }
                     singleTestAdapter.setuAnswerListSize(questionList.size());
                     singleTestAdapter.notifyDataSetChanged();
+                    if (!isChecked)
+                    progress.setVisibility(View.GONE);
                 }
             }
 
@@ -144,45 +142,40 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
     }
 
     private void setUpViews() {
+        if (!isChecked) {
+            progress.setVisibility(View.VISIBLE);
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.clear:
-                                singleTestAdapter.setCleared(true);
-                                singleTestAdapter.setChecked(false);
-                                singleTestAdapter.clearUserAnswer();
-                                roomDatabase.testDao().updateCheckedTest(false, testId);
-                                setIsChecked(false);
-                                singleTestAdapter.notifyDataSetChanged();
-                                break;
-                            case R.id.check:
-                                if (!isChecked) {
-                                    singleTestAdapter.setChecked(true);
-                                    if (singleTestAdapter.checkTest()) {
-                                        singleTestAdapter.notifyDataSetChanged();
-                                        singleTestAdapter.displayTestResult();
-                                        roomDatabase.testDao().updateCheckedTest(true, testId);
-                                    }
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.clear:
+                            singleTestAdapter.setCleared(true);
+                            singleTestAdapter.setChecked(false);
+                            singleTestAdapter.clearUserAnswer();
+                            roomDatabase.testDao().updateCheckedTest(false, testId);
+                            setIsChecked(false);
+                            singleTestAdapter.notifyDataSetChanged();
+                            break;
+                        case R.id.check:
+                            if (!isChecked) {
+                                singleTestAdapter.setChecked(true);
+                                if (singleTestAdapter.checkTest()) {
+                                    singleTestAdapter.notifyDataSetChanged();
+                                    singleTestAdapter.displayTestResult();
+                                    roomDatabase.testDao().updateCheckedTest(true, testId);
                                 }
-                                break;
-                            case R.id.go_to_rule:
-                                Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-                                i.putExtra("topicName", topicName);
-                                startActivity(i);
-                                break;
-                        }
-                        return true;
+                            }
+                            break;
+                        case R.id.go_to_rule:
+                            Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
+                            i.putExtra("topicName", topicName);
+                            startActivity(i);
+                            break;
                     }
+                    return true;
                 });
 
-        arrowBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        arrowBack.setOnClickListener(view -> onBackPressed());
         testNameView.setText(testName);
 
     }
@@ -227,8 +220,8 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
     }
 
     public void readFromRoom(String id, int position) {
-         //positionAdapter = position;
-         mSubscriptions.add(readWithRX(this, id, position));
+        progress.setVisibility(View.VISIBLE);
+        mSubscriptions.add(readWithRX(this, id, position));
 
     }
 
@@ -247,6 +240,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                .subscribe(
                        res -> {
                            singleTestAdapter.setUAnswerFromRoom(res.get(0).getuAnswer(), position);
+                           progress.setVisibility(View.GONE);
                        },
                        throwable -> listener.onError(throwable.getMessage())
                );
@@ -254,11 +248,11 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
 
     @Override
     public void onFinished(String uAnswer,int position) {
-
     }
 
     @Override
     public void onError(String message) {
         Log.e("rxJava failed", message);
     }
+
 }

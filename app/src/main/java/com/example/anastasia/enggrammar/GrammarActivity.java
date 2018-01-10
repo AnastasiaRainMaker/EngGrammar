@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.anastasia.enggrammar.POJO.Topic;
@@ -55,6 +56,7 @@ public class GrammarActivity extends AppCompatActivity {
     AlertDialog.Builder alertDialog;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
+    ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,13 +75,14 @@ public class GrammarActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(grammarAdapter);
+        progressBar = findViewById(R.id.progress_grammar);
         setUpViews();
         drawerLayout.closeDrawer(GravityCompat.START);
         prepareTopics();
     }
 
     private void prepareTopics() {
-
+        progressBar.setVisibility(View.VISIBLE);
         postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,7 +93,7 @@ public class GrammarActivity extends AppCompatActivity {
                     }
                 }
                 grammarAdapter.notifyDataSetChanged();
-
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -132,12 +135,7 @@ public class GrammarActivity extends AppCompatActivity {
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
-        arrowClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-        });
+        arrowClose.setOnClickListener(view -> drawerLayout.closeDrawer(GravityCompat.START));
          final NavigationView navigationView = findViewById(R.id.nav_view);
          navigationView.setVerticalFadingEdgeEnabled(false);
          navigationView.setVerticalScrollBarEnabled(false);
@@ -152,18 +150,14 @@ public class GrammarActivity extends AppCompatActivity {
                  navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                  // Get the calculated width of the drawer
                  int width = drawerLayout.getMeasuredWidth();
-                 // Set header's height using aspectio ratio
-                 navigationView.getLayoutParams().width = (int) (width * 0.85);
+                  navigationView.getLayoutParams().width = (int) (width * 0.85);
                  // Update the layout on screen
                  navigationView.requestLayout();
              }
          });
-         menuToolbar.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
-                initSpruce();
-             }
+         menuToolbar.setOnClickListener(view -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+            initSpruce();
          });
          menuGrammar.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuTests.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));

@@ -30,10 +30,26 @@
             />
 
     </android.support.v7.widget.Toolbar>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_topic_test_list"
-        android:background="@null"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <ProgressBar
+            android:id="@+id/progress_test_list"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorPrimary"
+            android:elevation="5dp"
+           />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_topic_test_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 </LinearLayout>

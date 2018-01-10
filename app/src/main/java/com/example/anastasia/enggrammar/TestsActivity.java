@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.anastasia.enggrammar.POJO.Topic;
@@ -52,6 +53,7 @@ public class TestsActivity extends AppCompatActivity {
     TextView menuAbout;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
+    ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +72,13 @@ public class TestsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(testsAdapter);
+        progressBar = findViewById(R.id.progress_tests);
         setUpViews();
         prepareTopics();
     }
 
     private void prepareTopics() {
+        progressBar.setVisibility(View.VISIBLE);
         postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,6 +89,7 @@ public class TestsActivity extends AppCompatActivity {
                     }
                 }
                 testsAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
 
             }
 
