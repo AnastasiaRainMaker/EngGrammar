@@ -40,7 +40,6 @@ public class TestsActivity extends AppCompatActivity {
     View headerView;
     ImageView menuToolbar;
     ImageView arrowClose;
-    ImageView exitImage;
     RecyclerView mRecycler;
     Animator sAnimator;
     LinearLayout drawerRow1;
@@ -63,7 +62,6 @@ public class TestsActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar2);
         arrowClose = findViewById(R.id.img_drawer_close);
-        exitImage = findViewById(R.id.exit_drawer);
         menuGrammar = findViewById(R.id.menu_grammar);
         menuTests = findViewById(R.id.menu_tests);
         menuAbout = findViewById(R.id.menu_about);
@@ -125,13 +123,7 @@ public class TestsActivity extends AppCompatActivity {
 
     protected void setUpViews(){
         mRecycler.addItemDecoration(new SimpleDividerItemDecorationWhite(getResources()));
-        exitImage.setVisibility(View.GONE);
-        arrowClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-        });
+        arrowClose.setOnClickListener(view -> drawerLayout.closeDrawer(GravityCompat.START));
         final NavigationView navigationView = findViewById(R.id.nav_view2);
         navigationView.setVerticalFadingEdgeEnabled(false);
         navigationView.setVerticalScrollBarEnabled(false);
@@ -152,39 +144,27 @@ public class TestsActivity extends AppCompatActivity {
                 navigationView.requestLayout();
             }
         });
-        menuToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
-                initSpruce();
-            }
+        menuToolbar.setOnClickListener(view -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+            initSpruce();
         });
         menuGrammar.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
         menuTests.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
         menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
-        menuGrammar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-            }
+        menuGrammar.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
         });
-        menuTests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-            }
+        menuTests.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
         });
-        menuAbout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AboutActivity.class);
-                startActivity(i);
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
+        menuAbout.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), AboutActivity.class);
+            startActivity(i);
+            drawerLayout.closeDrawer(GravityCompat.START);
         });
 
     }

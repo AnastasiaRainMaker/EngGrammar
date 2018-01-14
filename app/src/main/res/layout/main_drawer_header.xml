@@ -152,16 +152,5 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/exit_drawer"
-        android:focusable="true"
-        android:clickable="true"
-        android:background="@drawable/exit"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-
-
 
 </LinearLayout>

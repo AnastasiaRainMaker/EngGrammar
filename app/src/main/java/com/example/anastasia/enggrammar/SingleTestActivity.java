@@ -26,7 +26,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Observable;
+
+import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -36,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anastasia on 12/27/17.
  */
 
-public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJava.OnFinishedListener {
+public class SingleTestActivity extends AppCompatActivity implements RxJava {
     ImageView arrowBack;
     TextView testNameView;
     String testName;
@@ -66,9 +72,9 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         testNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_test_content);
-        singleTestAdapter = new SingleTestAdapter(this, questionList);
         mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
+        singleTestAdapter = new SingleTestAdapter(this, questionList, testId);
         mRecycler.setAdapter(singleTestAdapter);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
         mSubscriptions = new CompositeDisposable();
@@ -107,7 +113,8 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                                 newTest = new Test();
                                 newTest.setId(testId);
                                 newTest.setCheckedTest(false);
-                                roomDatabase.testDao().insertTest(newTest);
+                                insertTestRoomRx(newTest);
+                                //roomDatabase.testDao().insertTest(newTest);
                             } else {
                                 testId = roomDatabase.testDao().findTestById(mTest.getId()).get(0).getId();
                             }
@@ -120,7 +127,8 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                                         newQuestion.setId(mQuestion.getId());
                                         newQuestion.setAnswer(mQuestion.getAnswer());
                                         newQuestion.setChecked(false);
-                                        roomDatabase.questionDao().insertQuestion(newQuestion);
+                                        //roomDatabase.questionDao().insertQuestion(newQuestion);
+                                        insertQuestionRoomRx(newQuestion);
                                     }
                                      questionList.add(mQuestion);
                                 }
@@ -149,9 +157,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                 item -> {
                     switch (item.getItemId()) {
                         case R.id.clear:
-                            singleTestAdapter.setCleared(true);
                             singleTestAdapter.setChecked(false);
-                            singleTestAdapter.clearUserAnswer();
                             roomDatabase.testDao().updateCheckedTest(false, testId);
                             setIsChecked(false);
                             singleTestAdapter.notifyDataSetChanged();
@@ -200,40 +206,86 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
 
     public void writeToRoom(String id, String uAnswer) {
         if (roomDatabase != null) {
-           List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
-           for (Question question : foundQ) {
-               question.setuAnswer(uAnswer);
-               question.setChecked(true);
-           }
-           roomDatabase.questionDao().updateQuestion(uAnswer, id);
+            mSubscriptions.add(writeToRoomRx(uAnswer, id));
         }
     }
 
-    public boolean checkRoom(String id) {
+    public boolean checkRoom() {
         if (roomDatabase != null) {
-            List<Question> foundQ = roomDatabase.questionDao().findQuestionById(id);
-            if (foundQ.size() > 0) {
-                return foundQ.get(0).getChecked();
+            List<Test> foundT = roomDatabase.testDao().findTestById(testId);
+            if (foundT.size() > 0) {
+                return foundT.get(0).isCheckedTest();
             }
         }
         return false;
     }
+    public void insertTestRoomRx(Test test) {
+        mSubscriptions.add(addTToRoomRx(test));
+    }
 
-    public void readFromRoom(String id, int position) {
+
+    public void insertQuestionRoomRx (Question question) {
+        mSubscriptions.add(addQToRoomRx(question));
+    }
+
+    public void readFromRoom (String id, int position) {
         progress.setVisibility(View.VISIBLE);
-        mSubscriptions.add(readWithRX(this, id, position));
+        mSubscriptions.add(readAnswerWithRoomRx(id, position));
 
     }
 
-    public void  updateCheckedRoom(Boolean value, String id) {
-        roomDatabase.questionDao().updateChecked(value, id);
+    public void  updateCheckedRoom (Boolean value, String id) {
+        mSubscriptions.add(updateCheckedRoomRx(value, id));
     }
 
-    public void deleteFromRoom(String uAnswer, String id) {
-        roomDatabase.questionDao().updateQuestion(uAnswer, id);
+    public void deleteFromRoom (String id) {
+        mSubscriptions.add(deleteFromRoomRx(id));
     }
 
-    public Disposable readWithRX(final OnFinishedListener listener, String id, int position) {
+    public Disposable updateCheckedRoomRx (Boolean value, String id) {
+        return Completable.fromAction(() -> roomDatabase.questionDao().updateChecked(value, id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .subscribe();
+    }
+
+    public Disposable deleteFromRoomRx (String id) {
+        return Completable.fromAction(() -> roomDatabase.questionDao().updateQuestion(null, id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .subscribe();
+    }
+
+    public Disposable writeToRoomRx(String uAnswer, String id) {
+        return Completable.fromAction(() -> roomDatabase.questionDao().updateQuestion(uAnswer, id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .subscribe();
+    }
+
+
+    public Disposable addTToRoomRx(Test test) {
+        return Completable.fromAction(() -> roomDatabase.testDao().insertTest(test))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .doOnComplete(() -> Log.i("RXJAVA", "test added"))
+                .subscribe();
+    }
+
+    public Disposable addQToRoomRx(Question question) {
+        return Completable.fromAction(() -> roomDatabase.questionDao().insertQuestion(question))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .doOnComplete(() -> Log.i("RXJAVA", "q added"))
+                .subscribe();
+    }
+
+    public Disposable readAnswerWithRoomRx(String id, int position) {
        return Single.fromCallable (() -> roomDatabase.questionDao().findQuestionById(id))
                .subscribeOn(Schedulers.io())
                .observeOn(AndroidSchedulers.mainThread())
@@ -242,15 +294,10 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava, RxJ
                            singleTestAdapter.setUAnswerFromRoom(res.get(0).getuAnswer(), position);
                            progress.setVisibility(View.GONE);
                        },
-                       throwable -> listener.onError(throwable.getMessage())
+                       throwable ->onError(throwable.getMessage())
                );
     }
 
-    @Override
-    public void onFinished(String uAnswer,int position) {
-    }
-
-    @Override
     public void onError(String message) {
         Log.e("rxJava failed", message);
     }

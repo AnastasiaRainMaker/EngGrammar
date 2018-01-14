@@ -42,7 +42,6 @@ public class GrammarActivity extends AppCompatActivity {
     View headerView;
     ImageView menuToolbar;
     ImageView arrowClose;
-    ImageView exitImage;
     RecyclerView mRecycler;
     Animator sAnimator;
     LinearLayout drawerRow1;
@@ -66,7 +65,6 @@ public class GrammarActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar);
         arrowClose = findViewById(R.id.img_drawer_close);
-        exitImage = findViewById(R.id.exit_drawer);
         menuGrammar = findViewById(R.id.menu_grammar);
         menuTests = findViewById(R.id.menu_tests);
         menuAbout = findViewById(R.id.menu_about);
@@ -127,15 +125,8 @@ public class GrammarActivity extends AppCompatActivity {
     }
 
     protected void setUpViews(){
-        mRecycler.addItemDecoration(new SimpleDividerItemDecorationWhite(getResources()));
-        exitImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        });
-        arrowClose.setOnClickListener(view -> drawerLayout.closeDrawer(GravityCompat.START));
+         mRecycler.addItemDecoration(new SimpleDividerItemDecorationWhite(getResources()));
+         arrowClose.setOnClickListener(view -> drawerLayout.closeDrawer(GravityCompat.START));
          final NavigationView navigationView = findViewById(R.id.nav_view);
          navigationView.setVerticalFadingEdgeEnabled(false);
          navigationView.setVerticalScrollBarEnabled(false);
@@ -162,30 +153,21 @@ public class GrammarActivity extends AppCompatActivity {
          menuGrammar.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuTests.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
-         menuGrammar.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                 startActivity(i);
-             }
+         menuGrammar.setOnClickListener(view -> {
+             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
+             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+             startActivity(i);
          });
-         menuTests.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                 startActivity(i);
+         menuTests.setOnClickListener(view -> {
+             Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+             startActivity(i);
 
-             }
          });
-         menuAbout.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 Intent i = new Intent(getApplicationContext(), AboutActivity.class);
-                 startActivity(i);
-                 drawerLayout.closeDrawer(GravityCompat.START);
-             }
+         menuAbout.setOnClickListener(view -> {
+             Intent i = new Intent(getApplicationContext(), AboutActivity.class);
+             startActivity(i);
+             drawerLayout.closeDrawer(GravityCompat.START);
          });
 
      }
@@ -194,18 +176,8 @@ public class GrammarActivity extends AppCompatActivity {
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("Вы уверены, что хотите выйти?")
                    .setCancelable(true)
-                   .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialogInterface, int i) {
-                           GrammarActivity.this.finish();
-                       }
-                   })
-                  .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-                      @Override
-                      public void onClick(DialogInterface dialogInterface, int i) {
-                          dialogInterface.cancel();
-                      }
-                  });
+                   .setPositiveButton("Да", (dialogInterface, i) -> GrammarActivity.this.finish())
+                  .setNegativeButton("Отмена", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alert = alertDialog.create();
         alert.show();
         int textViewId = alert.getContext().getResources().getIdentifier("android:id/message", null, null);

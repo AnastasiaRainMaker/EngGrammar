@@ -1,5 +1,7 @@
 package com.example.anastasia.enggrammar;
 
+import com.example.anastasia.enggrammar.POJO.Question;
+import com.example.anastasia.enggrammar.POJO.Test;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -8,11 +10,17 @@ import io.reactivex.disposables.Disposable;
 
 public interface RxJava {
 
-    Disposable readWithRX (OnFinishedListener listener, String id, int position);
 
-    interface OnFinishedListener {
-        void onFinished(String uAnswer, int position);
-        void onError(String message);
-    }
+    Disposable writeToRoomRx(String uAnswer, String id);
+
+    Disposable addTToRoomRx(Test test);
+
+    Disposable addQToRoomRx(Question question);
+
+    Disposable readAnswerWithRoomRx(String id, int position);
+
+    Disposable deleteFromRoomRx (String id);
+
+    Disposable updateCheckedRoomRx (Boolean value, String id);
 
 }

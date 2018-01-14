@@ -80,7 +80,6 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
                   }
                    topicTestListAdapter.setTestCheckedSize(testList.size());
                    topicTestListAdapter.notifyDataSetChanged();
-                   //progressBar.setVisibility(View.GONE);
                 }
             }
 

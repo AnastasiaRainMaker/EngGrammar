@@ -30,12 +30,12 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
     public ArrayList<String> optionList = new ArrayList<>();
     public ArrayList<String> rAnswerList = new ArrayList<>();
     public String[] uAnswerList;
+   // private String testId;
     public List<Question> questionList;
     SingleTestActivity mActivity = new SingleTestActivity();
     public ArrayList<Boolean> isCorrect = new ArrayList<>();
     public ColorStateList mList;
     public View.OnClickListener onClickListener;
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView questionView;
@@ -50,9 +50,10 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         }
     }
 
-    public SingleTestAdapter(SingleTestActivity mActivity, List<Question> questionList) {
+    public SingleTestAdapter(SingleTestActivity mActivity, List<Question> questionList, String testId) {
         this.questionList = questionList;
         this.mActivity = mActivity;
+        //this.testId = testId;
     }
 
     @Override
@@ -94,16 +95,16 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
         optionList.clear();
 
-        if (questionList.get(position).getCleared()) {
+        if (questionList.get(position).getCleared() || !mActivity.checkRoom()) {
             holder.radioGroup.clearCheck();
-            mActivity.deleteFromRoom(null, questionList.get(position).getId());
+            mActivity.deleteFromRoom (questionList.get(position).getId());
             mActivity.updateCheckedRoom(false, questionList.get(position).getId());
             for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
                 ((RadioButton) holder.radioGroup.getChildAt(i)).setButtonTintList(mList);
             }
         }
 
-        if (mActivity.checkRoom(questionList.get(position).getId())) {
+        if (mActivity.checkRoom()) {
             mActivity.setIsChecked(true);
             questionList.get(position).setChecked(true);
             if(uAnswerList[position] == null)
@@ -112,7 +113,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         }
 
         if (questionList.get(position).getChecked()) {
-            if (!mActivity.checkRoom(questionList.get(position).getId())) {
+            if (!mActivity.checkRoom()) {
                 mActivity.updateCheckedRoom(true, questionList.get(position).getId());
             }
             for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
@@ -198,10 +199,10 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         return questionList.size();
     }
 
-    public void  clearUserAnswer() {
-        if (uAnswerList != null)
-        uAnswerList = new String[questionList.size()];
-    }
+//    public void  clearUserAnswer() {
+//        if (uAnswerList != null)
+//        uAnswerList = new String[questionList.size()];
+//    }
 
     public void setuAnswerListSize(int size) {
        uAnswerList = new String[size];
