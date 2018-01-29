@@ -9,6 +9,8 @@ import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.R;
 import com.example.anastasia.enggrammar.TopicTestsList;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,11 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
+        public TextView newTextView;
 
         MyViewHolder(View view) {
             super(view);
-
+            newTextView = view.findViewById(R.id.new_sign);
             name = view.findViewById(R.id.topic_test_item);
         }
     }
@@ -65,6 +68,10 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         }
         holder.name.setText(testNumber);
         holder.name.setOnClickListener(view -> onClick.onItemClick(position));
+        if (testList.get(position).getIsNew() == null) {
+            holder.newTextView.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

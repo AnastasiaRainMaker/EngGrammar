@@ -14,8 +14,10 @@ import java.util.HashMap;
 public class Test {
     @Ignore
     public String name;
-    @PrimaryKey
+    @Ignore
+    private String isNew;
     @NonNull
+    @PrimaryKey
     public String id;
 
     public boolean checkedTest;
@@ -24,8 +26,8 @@ public class Test {
 
     }
 
-    public Test(String name, String id, boolean checkedTest){
-
+    public Test(String name, @NonNull String id, boolean checkedTest, String isNew){
+        this.isNew = isNew;
         this.id = id;
         this.checkedTest = checkedTest;
         this.name = name;
@@ -55,5 +57,14 @@ public class Test {
     public void setCheckedTest(boolean checkedTest) {
         this.checkedTest = checkedTest;
     }
+
+    public String getIsNew() {
+        return isNew;
+    }
+
+    public void setNew(String aNew) {
+        this.isNew = aNew;
+    }
+
 
 }

@@ -18,10 +18,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".AboutActivity"  />
-        <activity android:name=".TestsActivity"  />
-        <activity android:name=".TopicGrActivity" />
+        <activity android:name=".TestsActivity"
+            android:parentActivityName=".GrammarActivity"/>
+        <activity android:name=".TopicGrActivity"
+            android:parentActivityName=".GrammarActivity"/>
         <activity android:name=".TopicTestsList" />
-        <activity android:name=".SingleTestActivity" />
+        <activity android:name=".SingleTestActivity"
+            android:parentActivityName=".TopicTestsList"/>
     </application>
 
 </manifest>

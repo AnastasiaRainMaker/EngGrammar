@@ -52,15 +52,12 @@ public class GrammarAdapter extends RecyclerView.Adapter<GrammarAdapter.MyViewHo
         final String topic = topicList.get(position);
         final Boolean fromTests = false;
         holder.name.setText(topic);
-        holder.mLayout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                Intent i = new Intent(context, TopicGrActivity.class);
-                i.putExtra("fromTests", fromTests);
-                i.putExtra("topicName", topic);
-                context.startActivity(i);
-            }
+        holder.mLayout.setOnClickListener(view -> {
+            Context context = view.getContext();
+            Intent i = new Intent(context, TopicGrActivity.class);
+            i.putExtra("fromTests", fromTests);
+            i.putExtra("topicName", topic);
+            context.startActivity(i);
         });
     }
 

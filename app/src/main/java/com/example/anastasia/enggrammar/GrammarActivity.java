@@ -154,15 +154,16 @@ public class GrammarActivity extends AppCompatActivity {
          menuTests.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuGrammar.setOnClickListener(view -> {
-             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-             startActivity(i);
+//             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
+//             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//             startActivity(i);
+             drawerLayout.closeDrawer(GravityCompat.START);
          });
          menuTests.setOnClickListener(view -> {
              Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
              startActivity(i);
-
+             drawerLayout.closeDrawer(GravityCompat.START);
          });
          menuAbout.setOnClickListener(view -> {
              Intent i = new Intent(getApplicationContext(), AboutActivity.class);

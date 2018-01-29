@@ -87,21 +87,13 @@ public class TopicGrActivity extends AppCompatActivity {
         description.setMovementMethod(new ScrollingMovementMethod());
         description.setMovementMethod(LinkMovementMethod.getInstance());
         topicNameView.setText(topicName);
-        goToTestsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), TopicTestsList.class);
-                i.putExtra("testName", topicName);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-            }
+        goToTestsBtn.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), TopicTestsList.class);
+            i.putExtra("testName", topicName);
+            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
         });
-        arrowBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        arrowBack.setOnClickListener(view -> onBackPressed());
 
     }
 
@@ -112,12 +104,12 @@ public class TopicGrActivity extends AppCompatActivity {
             mDatabase.removeEventListener(postListener);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-    }
+//
+//    @Override
+//    public void onBackPressed() {
+////        super.onBackPressed();
+////        Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
+////        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+////        startActivity(i);
+//    }
 }
