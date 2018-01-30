@@ -115,6 +115,11 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
                             } else {
                                 topicTestListAdapter.setTestChecked(false, position);
                             }
+                            if ( res.size() > 0 && res.get(0).isCorrectTest() != null && res.get(0).isCorrectTest()) {
+                               topicTestListAdapter.setTestCorrect(true, position);
+                            } else if (res.size() > 0 && res.get(0).isCorrectTest() != null && !res.get(0).isCorrectTest()){
+                                topicTestListAdapter.setTestCorrect(false, position);
+                            }
                             topicTestListAdapter.notifyItemChanged(position);
 
                         },

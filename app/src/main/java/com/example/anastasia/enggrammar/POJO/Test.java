@@ -22,11 +22,14 @@ public class Test {
 
     public boolean checkedTest;
 
+    public Boolean correctTest;
+
     public Test() {
 
     }
 
-    public Test(String name, @NonNull String id, boolean checkedTest, String isNew){
+    public Test(String name, @NonNull String id, boolean checkedTest, String isNew, Boolean correctTest){
+        this.correctTest = correctTest;
         this.isNew = isNew;
         this.id = id;
         this.checkedTest = checkedTest;
@@ -64,6 +67,14 @@ public class Test {
 
     public void setNew(String aNew) {
         this.isNew = aNew;
+    }
+
+    public Boolean isCorrectTest() {
+        return correctTest;
+    }
+
+    public void setCorrectTest(Boolean correctTest) {
+        this.correctTest = correctTest;
     }
 
 

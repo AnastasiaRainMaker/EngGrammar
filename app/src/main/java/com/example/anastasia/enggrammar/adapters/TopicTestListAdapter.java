@@ -24,6 +24,7 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
     private OnItemClicked onClick;
     private TopicTestsList mActivity;
     private Boolean[] testChecked;
+    private Boolean[] testCorrect;
 
     public interface OnItemClicked {
         void onItemClick(int position);
@@ -59,8 +60,10 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         if (testChecked[position] == null) {
             mActivity.isTestChecked(testList.get(position).getId(), position);
         } else {
-            if (testChecked[position]) {
+            if (testCorrect[position] != null && testCorrect[position]) {
                 holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorAccent));
+            } else if (testCorrect[position] != null && !testCorrect[position])  {
+                holder.name.setTextColor(mActivity.getResources().getColor(R.color.red));
             } else {
                 holder.name.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
             }
@@ -85,16 +88,22 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     public void setTestCheckedSize(int size) {
         testChecked = new Boolean[size];
+        testCorrect = new Boolean[size];
     }
 
     public  void setTestChecked(Boolean value, int position) {
         testChecked[position] = value;
     }
 
+    public  void setTestCorrect(Boolean value, int position) {
+        testCorrect[position] = value;
+    }
+
     public void clearTestChecked() {
         if (testChecked != null) {
             for (int i = 0; i < testChecked.length; i++) {
                 testChecked[i] = null;
+                testCorrect[i] = null;
             }
             notifyDataSetChanged();
         }

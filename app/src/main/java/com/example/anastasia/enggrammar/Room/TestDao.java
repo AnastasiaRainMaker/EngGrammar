@@ -30,4 +30,7 @@ public interface TestDao {
 
     @Query("UPDATE test SET checkedTest = :value WHERE id = :id")
     void updateCheckedTest (Boolean value, String id);
+
+    @Query("UPDATE test SET correctTest = :value WHERE id = :id")
+    void updateCorrectTest (Boolean value, String id);
 }

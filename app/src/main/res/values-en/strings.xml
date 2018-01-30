@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">EngGrammar</string>
+    <string name="enggrammar">Grammar</string>
+    <string name="grammar">Grammar</string>
+    <string name="tests">Tests</string>
+    <string name="about">About</string>
+    <string name="go_to_tests">Go to Tests</string>
+    <string name="go_to_rule">Go to Grammar</string>
+    <string name="clear_filled">Clear</string>
+    <string name="clear">Clear</string>
+    <string name="check">Check</string>
+    
+    <string name="about_app">The app "EngGrammar" is targeted at non-native English learners of Elementary level (A1-A2). It will help master basic grammar rules as well as make learners confident in their knowledge by the means of grammar tests and tasks!</string>
+
+</resources>

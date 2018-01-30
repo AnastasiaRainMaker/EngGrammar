@@ -26,13 +26,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Observable;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleObserver;
-import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -160,16 +156,22 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
                             singleTestAdapter.setChecked(false);
                             roomDatabase.testDao().updateCheckedTest(false, testId);
                             setIsChecked(false);
+                            singleTestAdapter.clearUserAnswer();
                             singleTestAdapter.notifyDataSetChanged();
+                            updateCorrectTestRoom(null, testId);
                             break;
                         case R.id.check:
                             if (!isChecked) {
                                 singleTestAdapter.setChecked(true);
                                 if (singleTestAdapter.checkTest()) {
                                     singleTestAdapter.notifyDataSetChanged();
-                                    singleTestAdapter.displayTestResult();
+                                    if (singleTestAdapter.getTestResult()) {
+                                        updateCorrectTestRoom(true,testId);
+                                    } else {
+                                        updateCorrectRoomRx(false, testId);
+                                    }
                                     roomDatabase.testDao().updateCheckedTest(true, testId);
-                                }
+                                 }
                             }
                             break;
                         case R.id.go_to_rule:
@@ -238,8 +240,21 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
         mSubscriptions.add(updateCheckedRoomRx(value, id));
     }
 
+    public void  updateCorrectTestRoom (Boolean value, String id) {
+        mSubscriptions.add(updateCorrectRoomRx(value, id));
+    }
+
+
     public void deleteFromRoom (String id) {
         mSubscriptions.add(deleteFromRoomRx(id));
+    }
+
+    public Disposable updateCorrectRoomRx (Boolean value, String id) {
+        return Completable.fromAction(() -> roomDatabase.testDao().updateCorrectTest(value, id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorComplete()
+                .subscribe();
     }
 
     public Disposable updateCheckedRoomRx (Boolean value, String id) {

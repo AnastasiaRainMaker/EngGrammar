@@ -147,10 +147,14 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
             }
     }
 
-    public void displayTestResult() {
+    public boolean getTestResult() {
         if (!isCorrect.contains(false) && isCorrect.size() == questionList.size()) {
             Toast.makeText(mActivity, "Все ответы правильные", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (isCorrect.contains(false) && isCorrect.size() == questionList.size()) {
+            return false;
         }
+        return false;
     }
 
     public boolean checkTest() {
@@ -199,10 +203,10 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         return questionList.size();
     }
 
-//    public void  clearUserAnswer() {
-//        if (uAnswerList != null)
-//        uAnswerList = new String[questionList.size()];
-//    }
+    public void  clearUserAnswer() {
+        if (uAnswerList != null)
+        uAnswerList = new String[questionList.size()];
+    }
 
     public void setuAnswerListSize(int size) {
        uAnswerList = new String[size];
