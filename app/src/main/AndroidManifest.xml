@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".GrammarActivity"
+            android:launchMode="singleTask"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,12 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity"  />
+        <activity android:name=".AboutActivity"
+            android:parentActivityName=".GrammarActivity"/>
         <activity android:name=".TestsActivity"
             android:parentActivityName=".GrammarActivity"/>
         <activity android:name=".TopicGrActivity"
             android:parentActivityName=".GrammarActivity"/>
-        <activity android:name=".TopicTestsList" />
+        <activity android:name=".TopicTestsList"
+            android:parentActivityName=".TopicGrActivity"/>
         <activity android:name=".SingleTestActivity"
             android:parentActivityName=".TopicTestsList"/>
     </application>

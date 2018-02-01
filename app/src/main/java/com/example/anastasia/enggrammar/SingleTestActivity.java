@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class SingleTestActivity extends AppCompatActivity implements RxJava {
+    Boolean fromTests;
     ImageView arrowBack;
     TextView testNameView;
     String testName;
@@ -63,6 +65,7 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
         isChecked = false;
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
+        fromTests = getIntent().getBooleanExtra("fromTests", false);
         topicName = getIntent().getStringExtra("topicName");
         testName = getIntent().getStringExtra("testNumber");
         arrowBack = findViewById(R.id.arrow_back_toolbar);
@@ -176,6 +179,8 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
                             break;
                         case R.id.go_to_rule:
                             Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
+                            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            i.putExtra("fromTests", fromTests);
                             i.putExtra("topicName", topicName);
                             startActivity(i);
                             break;

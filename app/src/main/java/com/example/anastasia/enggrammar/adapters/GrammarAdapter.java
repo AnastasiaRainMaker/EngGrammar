@@ -50,12 +50,10 @@ public class GrammarAdapter extends RecyclerView.Adapter<GrammarAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final String topic = topicList.get(position);
-        final Boolean fromTests = false;
         holder.name.setText(topic);
         holder.mLayout.setOnClickListener(view -> {
             Context context = view.getContext();
             Intent i = new Intent(context, TopicGrActivity.class);
-            i.putExtra("fromTests", fromTests);
             i.putExtra("topicName", topic);
             context.startActivity(i);
         });

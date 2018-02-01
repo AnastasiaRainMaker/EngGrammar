@@ -2,6 +2,7 @@ package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 
 public class TopicGrActivity extends AppCompatActivity {
+    Boolean fromTests;
     String topicName;
     TextView topicNameView;
     Button goToTestsBtn;
@@ -42,6 +44,7 @@ public class TopicGrActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_gr);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
+        fromTests = getIntent().getBooleanExtra("fromTests", false);
         topicName = getIntent().getStringExtra("topicName");
         topicNameView = findViewById(R.id.topic_grammar_name);
         goToTestsBtn = findViewById(R.id.go_to_tests);
@@ -104,7 +107,20 @@ public class TopicGrActivity extends AppCompatActivity {
             mDatabase.removeEventListener(postListener);
         }
     }
-//
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (!fromTests) {
+            NavUtils.navigateUpFromSameTask(this);
+        } else {
+            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+        }
+    }
+
+    //
 //    @Override
 //    public void onBackPressed() {
 ////        super.onBackPressed();

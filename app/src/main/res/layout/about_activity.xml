@@ -3,7 +3,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/toolbar_about"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.Toolbar
+            android:background="@drawable/gradient"
+            android:elevation="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            >
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bird" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:fontFamily="@font/nautilus"
+                android:layout_gravity="center"/>
+         </android.support.v7.widget.Toolbar>
+    </LinearLayout>
+
     <TextView
+        android:layout_weight="0.2"
         android:textColor="@color/colorPrimaryDark"
         android:padding="10dp"
         android:layout_width="match_parent"

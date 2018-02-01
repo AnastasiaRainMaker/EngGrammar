@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -153,13 +154,13 @@ public class TestsActivity extends AppCompatActivity {
         menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
         menuGrammar.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         });
         menuTests.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
+//            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+//            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(i);
         });
         menuAbout.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AboutActivity.class);
@@ -169,13 +170,11 @@ public class TestsActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-////        Intent i = new Intent(this, GrammarActivity.class);
-////        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////        startActivity(i);
-////        finish();
-//    }
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
+
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

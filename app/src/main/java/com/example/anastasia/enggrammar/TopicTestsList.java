@@ -38,17 +38,17 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     TopicTestListAdapter topicTestListAdapter;
     ImageView arrowBack;
     TextView topicNameView;
+    Boolean fromTest;
     String topicName;
     DatabaseReference mDatabase;
     ValueEventListener postListener;
-    Boolean fromTests;
     ProgressBar progressBar;
     private AppDatabase roomDatabase;
     private CompositeDisposable mSubscriptions;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fromTests = getIntent().getBooleanExtra("fromTests", false);
+        fromTest = getIntent().getBooleanExtra("fromTest", false);
         topicName = getIntent().getStringExtra("testName");
         setContentView(R.layout.activity_topic_test_list);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
@@ -151,25 +151,27 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     public void onItemClick(int position) {
         String testNumber = testList.get(position).getName();
         Intent i = new Intent(getApplicationContext(), SingleTestActivity.class);
+        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.putExtra("fromTests", fromTest);
         i.putExtra("testNumber", testNumber);
         i.putExtra("topicName", topicName);
         startActivity(i);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 //        if(!fromTests) {
 //            Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
 //            i.putExtra("topicName", topicName);
 //          //  i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //            startActivity(i);
-//        } else {
+//       if (fromTest){
 //            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-//           // i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //            startActivity(i);
 //        }
-//    }
+    }
 
     public void hideProgress(int position) {
         if (position == testList.size()-1) progressBar.setVisibility(View.GONE);
