@@ -2,6 +2,7 @@ package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -160,17 +161,13 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        if(!fromTests) {
-//            Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-//            i.putExtra("topicName", topicName);
-//          //  i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(i);
-//       if (fromTest){
-//            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(i);
-//        }
+            if (!fromTest) {
+                super.onBackPressed();
+            } else {
+                Intent i = new Intent(getApplicationContext(), TestsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
     }
 
     public void hideProgress(int position) {

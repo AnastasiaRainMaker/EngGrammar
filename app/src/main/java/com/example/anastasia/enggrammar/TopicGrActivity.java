@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Topic;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ public class TopicGrActivity extends AppCompatActivity {
     ValueEventListener postListener;
     TextView description;
     ProgressBar progressBar;
+    ScrollView scrollView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class TopicGrActivity extends AppCompatActivity {
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         description = findViewById(R.id.topic_description);
         progressBar = findViewById(R.id.progress_topic);
+        scrollView = findViewById(R.id.scrollViewDescription);
         setUpViews();
         loadData();
     }
@@ -90,8 +93,10 @@ public class TopicGrActivity extends AppCompatActivity {
         description.setMovementMethod(new ScrollingMovementMethod());
         description.setMovementMethod(LinkMovementMethod.getInstance());
         topicNameView.setText(topicName);
+        scrollView.setSmoothScrollingEnabled(true);
         goToTestsBtn.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), TopicTestsList.class);
+            i.putExtra("fromTest", fromTests);
             i.putExtra("testName", topicName);
             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
