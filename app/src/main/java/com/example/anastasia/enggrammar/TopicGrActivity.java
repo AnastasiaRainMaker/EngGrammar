@@ -3,13 +3,10 @@ package com.example.anastasia.enggrammar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -98,7 +95,6 @@ public class TopicGrActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), TopicTestsList.class);
             i.putExtra("fromTest", fromTests);
             i.putExtra("testName", topicName);
-            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         });
         arrowBack.setOnClickListener(view -> onBackPressed());
@@ -124,13 +120,4 @@ public class TopicGrActivity extends AppCompatActivity {
             startActivity(i);
         }
     }
-
-    //
-//    @Override
-//    public void onBackPressed() {
-////        super.onBackPressed();
-////        Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-////        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////        startActivity(i);
-//    }
 }

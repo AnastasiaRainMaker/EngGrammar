@@ -25,9 +25,9 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.MyViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView name;
-        public LinearLayout mLayout;
+        LinearLayout mLayout;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.test);
             mLayout = view.findViewById(R.id.tests_row);
@@ -49,13 +49,11 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final String test = testsList.get(position);
-        final Boolean fromTest = true;
         holder.name.setText(test);
         holder.mLayout.setOnClickListener(view -> {
             Context context = view.getContext();
             Intent i = new Intent(context, TopicTestsList.class);
-            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.putExtra("fromTest", fromTest);
+            i.putExtra("fromTest", true);
             i.putExtra("testName", test);
             context.startActivity(i);
         });

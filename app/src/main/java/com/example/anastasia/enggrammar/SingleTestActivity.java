@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anastasia on 12/27/17.
  */
 
-public class SingleTestActivity extends AppCompatActivity implements RxJava {
+public class SingleTestActivity extends AppCompatActivity {
     Boolean fromTests;
     ImageView arrowBack;
     TextView testNameView;
@@ -113,7 +113,6 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
                                 newTest.setId(testId);
                                 newTest.setCheckedTest(false);
                                 insertTestRoomRx(newTest);
-                                //roomDatabase.testDao().insertTest(newTest);
                             } else {
                                 testId = roomDatabase.testDao().findTestById(mTest.getId()).get(0).getId();
                             }
@@ -126,7 +125,6 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
                                         newQuestion.setId(mQuestion.getId());
                                         newQuestion.setAnswer(mQuestion.getAnswer());
                                         newQuestion.setChecked(false);
-                                        //roomDatabase.questionDao().insertQuestion(newQuestion);
                                         insertQuestionRoomRx(newQuestion);
                                     }
                                      questionList.add(mQuestion);
@@ -179,7 +177,6 @@ public class SingleTestActivity extends AppCompatActivity implements RxJava {
                             break;
                         case R.id.go_to_rule:
                             Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-                            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             i.putExtra("fromTests", fromTests);
                             i.putExtra("topicName", topicName);
                             startActivity(i);

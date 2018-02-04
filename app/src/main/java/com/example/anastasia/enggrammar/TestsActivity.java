@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.example.anastasia.enggrammar.POJO.Topic;
 import com.example.anastasia.enggrammar.recyclerDividers.SimpleDividerItemDecorationWhite;
 import com.example.anastasia.enggrammar.adapters.TestsAdapter;
@@ -129,19 +128,13 @@ public class TestsActivity extends AppCompatActivity {
         navigationView.setVerticalFadingEdgeEnabled(false);
         navigationView.setVerticalScrollBarEnabled(false);
         headerView = navigationView.getHeaderView(0);
-        // set drawer size
         ViewTreeObserver vto = navigationView.getViewTreeObserver();
-        // When the layout has been draw
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                // Remove this listener
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                // Get the calculated width of the drawer
                 int width = drawerLayout.getMeasuredWidth();
-                // Set header's height using aspectio ratio
                 navigationView.getLayoutParams().width = (int) (width * 0.85);
-                // Update the layout on screen
                 navigationView.requestLayout();
             }
         });
@@ -154,20 +147,13 @@ public class TestsActivity extends AppCompatActivity {
         menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
         menuGrammar.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
-        });
-        menuTests.setOnClickListener(view -> {
-//            Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-//            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(i);
         });
         menuAbout.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), AboutActivity.class);
             startActivity(i);
             drawerLayout.closeDrawer(GravityCompat.START);
         });
-
     }
 
     @Override
@@ -182,5 +168,4 @@ public class TestsActivity extends AppCompatActivity {
             mDatabase.removeEventListener(postListener);
         }
     }
-
 }

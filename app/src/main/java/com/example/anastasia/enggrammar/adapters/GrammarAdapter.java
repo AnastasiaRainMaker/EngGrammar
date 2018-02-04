@@ -24,9 +24,9 @@ public class GrammarAdapter extends RecyclerView.Adapter<GrammarAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public LinearLayout mLayout;
+        LinearLayout mLayout;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.topic);
             mLayout = view.findViewById(R.id.topic_row);

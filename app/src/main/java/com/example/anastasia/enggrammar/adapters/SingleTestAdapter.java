@@ -37,11 +37,11 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
     public ColorStateList mList;
     public View.OnClickListener onClickListener;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView questionView;
-        public RadioGroup radioGroup;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView questionView;
+        RadioGroup radioGroup;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             questionView = view.findViewById(R.id.question);
             radioGroup = view.findViewById(R.id.rgroup);
@@ -142,9 +142,9 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
                         nBtn.setButtonTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.red)));
                         nBtn.setChecked(true);
                     }
-                }
-                disableRadioG(holder);
             }
+            disableRadioG(holder);
+        }
     }
 
     public boolean getTestResult() {
@@ -159,8 +159,8 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
     public boolean checkTest() {
         isCorrect.clear();
-        if (Arrays.asList(uAnswerList).contains(null) || uAnswerList == null) {
-            setCleared(false);
+        if (uAnswerList == null || Arrays.asList(uAnswerList).contains(null)) {
+            setCleared();
             Toast.makeText(mActivity, "Необходимо ответить на все вопросы", Toast.LENGTH_SHORT).show();
             setChecked(false);
             mActivity.setIsChecked(false);
@@ -191,10 +191,10 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         }
     }
 
-    public void setCleared(boolean value) {
+    public void setCleared() {
         for (int i = 0; i < questionList.size(); i++) {
             Question q = questionList.get(i);
-            q.setCleared(value);
+            q.setCleared(false);
         }
     }
 

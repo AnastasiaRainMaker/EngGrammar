@@ -152,7 +152,6 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     public void onItemClick(int position) {
         String testNumber = testList.get(position).getName();
         Intent i = new Intent(getApplicationContext(), SingleTestActivity.class);
-        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("fromTests", fromTest);
         i.putExtra("testNumber", testNumber);
         i.putExtra("topicName", topicName);
@@ -173,6 +172,4 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     public void hideProgress(int position) {
         if (position == testList.size()-1) progressBar.setVisibility(View.GONE);
     }
-
-
 }

@@ -32,7 +32,7 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public TextView newTextView;
+        TextView newTextView;
 
         MyViewHolder(View view) {
             super(view);

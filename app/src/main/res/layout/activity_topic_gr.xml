@@ -15,7 +15,6 @@
             android:id="@+id/topic_grammar_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Present Simple"
             android:textColor="@color/white"
             android:textSize="26sp"
             android:fontFamily="@font/nautilus"

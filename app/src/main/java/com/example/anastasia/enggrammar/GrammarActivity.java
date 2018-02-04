@@ -2,7 +2,6 @@ package com.example.anastasia.enggrammar;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -20,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.example.anastasia.enggrammar.POJO.Topic;
 import com.example.anastasia.enggrammar.recyclerDividers.SimpleDividerItemDecorationWhite;
 import com.example.anastasia.enggrammar.adapters.GrammarAdapter;
@@ -97,7 +95,6 @@ public class GrammarActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                Log.e("Database", "loadPost:onCancelled", databaseError.toException());
-
             }
         };
         mDatabase.addValueEventListener(postListener);
@@ -131,18 +128,13 @@ public class GrammarActivity extends AppCompatActivity {
          navigationView.setVerticalFadingEdgeEnabled(false);
          navigationView.setVerticalScrollBarEnabled(false);
          headerView = navigationView.getHeaderView(0);
-         // set drawer size
          ViewTreeObserver vto = navigationView.getViewTreeObserver();
-         // When the layout has been draw
          vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
              @Override
              public void onGlobalLayout() {
-                 // Remove this listener
                  navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                 // Get the calculated width of the drawer
                  int width = drawerLayout.getMeasuredWidth();
-                  navigationView.getLayoutParams().width = (int) (width * 0.85);
-                 // Update the layout on screen
+                 navigationView.getLayoutParams().width = (int) (width * 0.85);
                  navigationView.requestLayout();
              }
          });
@@ -153,15 +145,9 @@ public class GrammarActivity extends AppCompatActivity {
          menuGrammar.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuTests.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
          menuAbout.setTextColor(getResources().getColorStateList(R.color.text_menu_selector));
-         menuGrammar.setOnClickListener(view -> {
-//             Intent i = new Intent(getApplicationContext(), GrammarActivity.class);
-//             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//             startActivity(i);
-             drawerLayout.closeDrawer(GravityCompat.START);
-         });
+         menuGrammar.setOnClickListener(view -> drawerLayout.closeDrawer(GravityCompat.START));
          menuTests.setOnClickListener(view -> {
              Intent i = new Intent(getApplicationContext(), TestsActivity.class);
-             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
              startActivity(i);
              drawerLayout.closeDrawer(GravityCompat.START);
          });
@@ -171,7 +157,8 @@ public class GrammarActivity extends AppCompatActivity {
              drawerLayout.closeDrawer(GravityCompat.START);
          });
 
-     }
+    }
+
     @Override
     public void onBackPressed() {
         alertDialog = new AlertDialog.Builder(this);

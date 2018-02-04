@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +11,6 @@
         android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="__ cat eats mice every day."
         android:layout_weight="0.2"
         android:padding="10dp"
         android:paddingStart="20dp"
@@ -18,8 +18,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         android:layout_marginStart="0dp"
-
-        />
+        tools:ignore="RtlSymmetry" />
 
     <RadioGroup
         android:paddingStart="20dp"
@@ -27,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_weight="0.8"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="RtlSymmetry">
 
         <RadioButton
             android:theme="@style/MyRadioButton"

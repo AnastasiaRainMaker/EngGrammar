@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Color when the row is selected -->
-    <item android:state_pressed="true" android:drawable="@color/medBl" />
+    <item android:state_pressed="true" android:drawable="@color/medBl" android:color="@color/medBl" />
     <!-- Standard background color -->
-    <item  android:state_selected="false" android:drawable="@color/white"/>
+    <item  android:state_selected="false" android:drawable="@color/white" android:color="@color/white" />
 </selector>
