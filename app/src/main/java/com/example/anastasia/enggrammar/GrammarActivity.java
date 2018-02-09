@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -35,31 +34,36 @@ import java.util.List;
 
 public class GrammarActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    View headerView;
-    ImageView menuToolbar;
-    ImageView arrowClose;
-    RecyclerView mRecycler;
-    Animator sAnimator;
-    LinearLayout drawerRow1;
-    LinearLayout drawerRow2;
-    LinearLayout drawerRow3;
-    List<String> topicList = new ArrayList<>();
-    GrammarAdapter grammarAdapter;
-    TextView menuGrammar;
-    TextView menuTests;
-    TextView menuAbout;
-    AlertDialog.Builder alertDialog;
-    DatabaseReference mDatabase;
-    ValueEventListener postListener;
-    ProgressBar progressBar;
+    private DrawerLayout drawerLayout;
+    public View headerView;
+    private ImageView menuToolbar;
+    private ImageView arrowClose;
+    private RecyclerView mRecycler;
+    public Animator sAnimator;
+    private List<String> topicList = new ArrayList<>();
+    private GrammarAdapter grammarAdapter;
+    private TextView menuGrammar;
+    private TextView menuTests;
+    private TextView menuAbout;
+    private DatabaseReference mDatabase;
+    private ValueEventListener postListener;
+    private ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grammar);
+        initViews();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("topics");
-        toolbar = findViewById(R.id.toolbar);
+        grammarAdapter = new GrammarAdapter(topicList);
+        RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(mRecyclerManager);
+        mRecycler.setAdapter(grammarAdapter);
+        setUpViews();
+        drawerLayout.closeDrawer(GravityCompat.START);
+        prepareTopics();
+    }
+
+    private void initViews() {
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar);
         arrowClose = findViewById(R.id.img_drawer_close);
@@ -67,14 +71,7 @@ public class GrammarActivity extends AppCompatActivity {
         menuTests = findViewById(R.id.menu_tests);
         menuAbout = findViewById(R.id.menu_about);
         mRecycler = findViewById(R.id.recycler_grammar);
-        grammarAdapter = new GrammarAdapter(topicList);
-        RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(mRecyclerManager);
-        mRecycler.setAdapter(grammarAdapter);
         progressBar = findViewById(R.id.progress_grammar);
-        setUpViews();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        prepareTopics();
     }
 
     private void prepareTopics() {
@@ -94,16 +91,16 @@ public class GrammarActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-               Log.e("Database", "loadPost:onCancelled", databaseError.toException());
+               Log.e(Constants.TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addValueEventListener(postListener);
     }
 
     private void initSpruce() {
-        drawerRow1 = findViewById(R.id.drawer_row1);
-        drawerRow2 = findViewById(R.id.drawer_row2);
-        drawerRow3 = findViewById(R.id.drawer_row3);
+        LinearLayout drawerRow1 = findViewById(R.id.drawer_row1);
+        LinearLayout drawerRow2 = findViewById(R.id.drawer_row2);
+        LinearLayout drawerRow3 = findViewById(R.id.drawer_row3);
         sAnimator = new Spruce.SpruceBuilder(drawerRow1)
                 .sortWith(new DefaultSort(0))
                 .animateWith(DefaultAnimations.fadeInAnimator(drawerRow1, 800),
@@ -161,11 +158,11 @@ public class GrammarActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setMessage("Вы уверены, что хотите выйти?")
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage(getApplicationContext().getString(R.string.do_you_want_to_leave_str))
                    .setCancelable(true)
-                   .setPositiveButton("Да", (dialogInterface, i) -> GrammarActivity.this.finish())
-                  .setNegativeButton("Отмена", (dialogInterface, i) -> dialogInterface.cancel());
+                   .setPositiveButton(getApplicationContext().getString(R.string.yes), (dialogInterface, i) -> GrammarActivity.this.finish())
+                  .setNegativeButton(getApplicationContext().getString(R.string.no), (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alert = alertDialog.create();
         alert.show();
         int textViewId = alert.getContext().getResources().getIdentifier("android:id/message", null, null);

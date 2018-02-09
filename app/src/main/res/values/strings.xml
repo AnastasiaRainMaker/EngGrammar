@@ -11,5 +11,10 @@
     <string name="check">Проверить</string>
     <string name="about_app">Приложение EngGrammar ориентировано на изучающих английский язык уровня Beginner – Elementary (A1-A2). Программа поможет освоит теорию грамматики в доступной форме, а также закрепить полученные знания на практике путём выполнения тестовых заданий!</string>
     <string name="newFlag">New</string>
+    <string name="all_answers_are_correct_str">Все ответы правильные</string>
+    <string name="need_to_answer_str">Необходимо ответить на все вопросы</string>
+    <string name="do_you_want_to_leave_str">Вы уверены, что хотите выйти?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
 </resources>

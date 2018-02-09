@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.anastasia.enggrammar.R;
-import com.example.anastasia.enggrammar.TestsActivity;
 import com.example.anastasia.enggrammar.TopicTestsList;
 
 import java.util.List;
+
+import static com.example.anastasia.enggrammar.Constants.FROM_TESTS;
+import static com.example.anastasia.enggrammar.Constants.TEST_NAME;
 
 /**
  * Created by anastasia on 12/25/17.
@@ -31,7 +32,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.MyViewHolder
             super(view);
             name = view.findViewById(R.id.test);
             mLayout = view.findViewById(R.id.tests_row);
-           }
+        }
     }
 
 
@@ -52,9 +53,9 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.MyViewHolder
         holder.name.setText(test);
         holder.mLayout.setOnClickListener(view -> {
             Context context = view.getContext();
-            Intent i = new Intent(context, TopicTestsList.class);
-            i.putExtra("fromTest", true);
-            i.putExtra("testName", test);
+            Intent i = new Intent(view.getContext(), TopicTestsList.class);
+            i.putExtra(FROM_TESTS, true);
+            i.putExtra(TEST_NAME, test);
             context.startActivity(i);
         });
     }

@@ -8,10 +8,6 @@ import android.widget.TextView;
 import com.example.anastasia.enggrammar.POJO.Test;
 import com.example.anastasia.enggrammar.R;
 import com.example.anastasia.enggrammar.TopicTestsList;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +26,7 @@ public class TopicTestListAdapter extends RecyclerView.Adapter<TopicTestListAdap
         void onItemClick(int position);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         TextView newTextView;
 

@@ -9,7 +9,12 @@
     <string name="clear_filled">Clear</string>
     <string name="clear">Clear</string>
     <string name="check">Check</string>
-    
     <string name="about_app">The app "EngGrammar" is targeted at non-native English learners of Elementary level (A1-A2). It will help master basic grammar rules as well as make learners confident in their knowledge by the means of grammar tests and tasks!</string>
+    <string name="newFlag">New</string>
+    <string name="all_answers_are_correct_str">All your answers are correct</string>
+    <string name="need_to_answer_str">You need to answer to all the questions</string>
+    <string name="do_you_want_to_leave_str">Are you sure you want to leave?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

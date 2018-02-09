@@ -27,15 +27,13 @@ import java.util.Objects;
 
 public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.MyViewHolder> {
 
-    public ArrayList<String> optionList = new ArrayList<>();
-    public ArrayList<String> rAnswerList = new ArrayList<>();
-    public String[] uAnswerList;
-   // private String testId;
-    public List<Question> questionList;
-    SingleTestActivity mActivity = new SingleTestActivity();
-    public ArrayList<Boolean> isCorrect = new ArrayList<>();
-    public ColorStateList mList;
-    public View.OnClickListener onClickListener;
+    private ArrayList<String> optionList = new ArrayList<>();
+    private ArrayList<String> rAnswerList = new ArrayList<>();
+    private String[] uAnswerList;
+    private List<Question> questionList;
+    private SingleTestActivity mActivity = new SingleTestActivity();
+    private ArrayList<Boolean> isCorrect = new ArrayList<>();
+    private ColorStateList mList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView questionView;
@@ -46,14 +44,12 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
             questionView = view.findViewById(R.id.question);
             radioGroup = view.findViewById(R.id.rgroup);
             mList = mActivity.setColorStateList();
-
         }
     }
 
-    public SingleTestAdapter(SingleTestActivity mActivity, List<Question> questionList, String testId) {
+    public SingleTestAdapter(SingleTestActivity mActivity, List<Question> questionList) {
         this.questionList = questionList;
         this.mActivity = mActivity;
-        //this.testId = testId;
     }
 
     @Override
@@ -76,26 +72,25 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
 
         for (Map.Entry entry : map.entrySet()) {
              optionList.add(entry.getValue().toString());
-
         }
-        onClickListener = view -> {
-            RadioButton radioButton = (RadioButton) view;
-            radioButton.setChecked(true);
-            uAnswerList[position] = radioButton.getText().toString();
-            if (uAnswerList[position] != null) {
-                mActivity.writeToRoom(questionList.get(position).getId(), uAnswerList[position]);
-            }
-        };
 
         for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {
             holder.radioGroup.getChildAt(i).setClickable(true);
             ((RadioButton) holder.radioGroup.getChildAt(i)).setText(optionList.get(i));
-            holder.radioGroup.getChildAt(i).setOnClickListener(onClickListener);
+
+            holder.radioGroup.getChildAt(i).setOnClickListener(view -> {
+                RadioButton radioButton = (RadioButton) view;
+                radioButton.setChecked(true);
+                uAnswerList[position] = radioButton.getText().toString();
+                if (uAnswerList[position] != null) {
+                    mActivity.writeToRoom(questionList.get(position).getId(), uAnswerList[position]);
+                }
+            });
         }
 
         optionList.clear();
 
-        if (questionList.get(position).getCleared() || !mActivity.checkRoom()) {
+        if (questionList.get(position).getIsCleared() || !mActivity.checkRoom()) {
             holder.radioGroup.clearCheck();
             mActivity.deleteFromRoom (questionList.get(position).getId());
             mActivity.updateCheckedRoom(false, questionList.get(position).getId());
@@ -107,7 +102,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         if (mActivity.checkRoom()) {
             mActivity.setIsChecked(true);
             questionList.get(position).setChecked(true);
-            if(uAnswerList[position] == null)
+            if (uAnswerList[position] == null)
             mActivity.readFromRoom(questionList.get(position).getId(), position);
 
         }
@@ -143,13 +138,13 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
                         nBtn.setChecked(true);
                     }
             }
-            disableRadioG(holder);
+            disableRadioG(holder); // todo
         }
     }
 
     public boolean getTestResult() {
         if (!isCorrect.contains(false) && isCorrect.size() == questionList.size()) {
-            Toast.makeText(mActivity, "Все ответы правильные", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.all_answers_are_correct_str), Toast.LENGTH_SHORT).show();
             return true;
         } else if (isCorrect.contains(false) && isCorrect.size() == questionList.size()) {
             return false;
@@ -161,7 +156,7 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         isCorrect.clear();
         if (uAnswerList == null || Arrays.asList(uAnswerList).contains(null)) {
             setCleared();
-            Toast.makeText(mActivity, "Необходимо ответить на все вопросы", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.need_to_answer_str), Toast.LENGTH_SHORT).show();  // todo
             setChecked(false);
             mActivity.setIsChecked(false);
         return false;
@@ -191,10 +186,10 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         }
     }
 
-    public void setCleared() {
+    private void setCleared() {
         for (int i = 0; i < questionList.size(); i++) {
             Question q = questionList.get(i);
-            q.setCleared(false);
+            q.setCleared();
         }
     }
 
@@ -208,9 +203,9 @@ public class SingleTestAdapter extends RecyclerView.Adapter<SingleTestAdapter.My
         uAnswerList = new String[questionList.size()];
     }
 
-    public void setuAnswerListSize(int size) {
+    public void setUserAnswerListSize(int size) {
        uAnswerList = new String[size];
-    }
+    }  // todo
 
     private void disableRadioG(MyViewHolder holder) {
         for (int i = 0; i < holder.radioGroup.getChildCount(); i++) {

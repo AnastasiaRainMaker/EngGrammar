@@ -22,37 +22,45 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.anastasia.enggrammar.Constants.FROM_TESTS;
+import static com.example.anastasia.enggrammar.Constants.TEST_NAME;
+import static com.example.anastasia.enggrammar.Constants.TOPIC_NAME;
+
 /**
  * Created by anastasia on 12/26/17.
  */
 
 public class TopicGrActivity extends AppCompatActivity {
-    Boolean fromTests;
-    String topicName;
-    TextView topicNameView;
-    Button goToTestsBtn;
-    ImageView arrowBack;
-    DatabaseReference mDatabase;
-    ValueEventListener postListener;
-    TextView description;
-    ProgressBar progressBar;
-    ScrollView scrollView;
+    private Boolean fromTests;
+    private String topicName;
+    private TextView topicNameView;
+    private Button goToTestsBtn;
+    private ImageView arrowBack;
+    private DatabaseReference mDatabase;
+    private ValueEventListener postListener;
+    private TextView description;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_gr);
+        initViews();
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
-        fromTests = getIntent().getBooleanExtra("fromTests", false);
-        topicName = getIntent().getStringExtra("topicName");
+        fromTests = getIntent().getBooleanExtra(FROM_TESTS, false);
+        topicName = getIntent().getStringExtra(TOPIC_NAME);
+        setUpViews();
+        loadData();
+    }
+
+    public void initViews() {
         topicNameView = findViewById(R.id.topic_grammar_name);
         goToTestsBtn = findViewById(R.id.go_to_tests);
         arrowBack = findViewById(R.id.arrow_back_toolbar);
         description = findViewById(R.id.topic_description);
         progressBar = findViewById(R.id.progress_topic);
         scrollView = findViewById(R.id.scrollViewDescription);
-        setUpViews();
-        loadData();
     }
 
     private void loadData() {
@@ -93,8 +101,8 @@ public class TopicGrActivity extends AppCompatActivity {
         scrollView.setSmoothScrollingEnabled(true);
         goToTestsBtn.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), TopicTestsList.class);
-            i.putExtra("fromTest", fromTests);
-            i.putExtra("testName", topicName);
+            i.putExtra(FROM_TESTS, fromTests);
+            i.putExtra(TEST_NAME, topicName);
             startActivity(i);
         });
         arrowBack.setOnClickListener(view -> onBackPressed());

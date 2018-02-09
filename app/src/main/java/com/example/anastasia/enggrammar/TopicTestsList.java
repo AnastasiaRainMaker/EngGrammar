@@ -2,7 +2,6 @@ package com.example.anastasia.enggrammar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,42 +28,51 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.example.anastasia.enggrammar.Constants.FROM_TESTS;
+import static com.example.anastasia.enggrammar.Constants.TEST_NAME;
+import static com.example.anastasia.enggrammar.Constants.TEST_NUMBER;
+import static com.example.anastasia.enggrammar.Constants.TOPIC_NAME;
+
 /**
  * Created by anastasia on 12/26/17.
  */
 
 public class TopicTestsList extends AppCompatActivity implements TopicTestListAdapter.OnItemClicked {
-    RecyclerView mRecycler;
-    List<Test> testList = new ArrayList<>();
-    TopicTestListAdapter topicTestListAdapter;
-    ImageView arrowBack;
-    TextView topicNameView;
-    Boolean fromTest;
-    String topicName;
-    DatabaseReference mDatabase;
-    ValueEventListener postListener;
-    ProgressBar progressBar;
+    private RecyclerView mRecycler;
+    private List<Test> testList = new ArrayList<>();
+    private TopicTestListAdapter topicTestListAdapter;
+    private ImageView arrowBack;
+    private TextView topicNameView;
+    private Boolean fromTest;
+    private String topicName;
+    private DatabaseReference mDatabase;
+    private ValueEventListener postListener;
+    private ProgressBar progressBar;
     private AppDatabase roomDatabase;
     private CompositeDisposable mSubscriptions;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fromTest = getIntent().getBooleanExtra("fromTest", false);
-        topicName = getIntent().getStringExtra("testName");
+        fromTest = getIntent().getBooleanExtra(FROM_TESTS, false);
+        topicName = getIntent().getStringExtra(TEST_NAME);
         setContentView(R.layout.activity_topic_test_list);
+        initView();
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
-        topicNameView = findViewById(R.id.topic_grammar_name);
         mRecycler = findViewById(R.id.recycler_topic_test_list);
         topicTestListAdapter = new TopicTestListAdapter(this, testList);
         RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
         mRecycler.setAdapter(topicTestListAdapter);
-        arrowBack = findViewById(R.id.arrow_back_toolbar);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
-        progressBar = findViewById(R.id.progress_test_list);
         mSubscriptions = new CompositeDisposable();
         setUpViews();
         prepareTestList();
+    }
+
+    public void initView(){
+        topicNameView = findViewById(R.id.topic_grammar_name);
+        arrowBack = findViewById(R.id.arrow_back_toolbar);
+        progressBar = findViewById(R.id.progress_test_list);
     }
 
     private void prepareTestList() {
@@ -124,7 +132,7 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
                             topicTestListAdapter.notifyItemChanged(position);
 
                         },
-                        throwable -> Log.e( "rxjava", "rxjava testlist threw error")
+                        throwable -> Log.e( Constants.TAG, "rxjava testlist threw error")
                 );
     }
 
@@ -152,9 +160,9 @@ public class TopicTestsList extends AppCompatActivity implements TopicTestListAd
     public void onItemClick(int position) {
         String testNumber = testList.get(position).getName();
         Intent i = new Intent(getApplicationContext(), SingleTestActivity.class);
-        i.putExtra("fromTests", fromTest);
-        i.putExtra("testNumber", testNumber);
-        i.putExtra("topicName", topicName);
+        i.putExtra(FROM_TESTS, fromTest);
+        i.putExtra(TEST_NUMBER, testNumber);
+        i.putExtra(TOPIC_NAME, topicName);
         startActivity(i);
     }
 

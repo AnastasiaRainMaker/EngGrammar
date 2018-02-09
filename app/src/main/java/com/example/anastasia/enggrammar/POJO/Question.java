@@ -38,16 +38,6 @@ public class Question {
 
     }
 
-    public Question(String name, String answer, HashMap<String, String> options, String text, @NonNull String id, String uAnswer, Boolean checked){
-        this.checked = checked;
-        this.answer = answer;
-        this.name = name;
-        this.text = text;
-        this.options = options;
-        this.id = id;
-        this.uAnswer = uAnswer;
-    }
-
     public Boolean getChecked() {
         return checked;
     }
@@ -56,20 +46,16 @@ public class Question {
         this.checked = checked;
     }
 
-    public Boolean getCleared() {
+    public Boolean getIsCleared() {
         return cleared;
     }
 
-    public void setCleared(Boolean cleared) {
-        this.cleared = cleared;
+    public void setCleared() {
+        this.cleared = false;
     }
 
     public HashMap<String, String> getOptions() {
         return options;
-    }
-
-    public void setOptions(HashMap<String, String> options) {
-        this.options = options;
     }
 
     public String getText() {
@@ -110,7 +96,7 @@ public class Question {
         return uAnswer;
     }
 
-    public void setuAnswer(String uAnswer) {
-        this.uAnswer = uAnswer;
+    public void setOptions(HashMap<String, String> options) {
+        this.options = options;
     }
 }

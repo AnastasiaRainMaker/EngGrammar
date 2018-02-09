@@ -14,6 +14,8 @@ import com.example.anastasia.enggrammar.TopicGrActivity;
 
 import java.util.List;
 
+import static com.example.anastasia.enggrammar.Constants.TOPIC_NAME;
+
 /**
  * Created by anastasia on 12/25/17.
  */
@@ -54,7 +56,7 @@ public class GrammarAdapter extends RecyclerView.Adapter<GrammarAdapter.MyViewHo
         holder.mLayout.setOnClickListener(view -> {
             Context context = view.getContext();
             Intent i = new Intent(context, TopicGrActivity.class);
-            i.putExtra("topicName", topic);
+            i.putExtra(TOPIC_NAME, topic);
             context.startActivity(i);
         });
     }

@@ -9,19 +9,11 @@ public class Topic {
     public String name;
     public String description;
 
-    public Topic() {
-
-    }
-    public Topic (String name, String description){
-
-        this.name = name;
-        this.description = description;
-    }
+    public Topic() {}
 
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -31,7 +23,4 @@ public class Topic {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

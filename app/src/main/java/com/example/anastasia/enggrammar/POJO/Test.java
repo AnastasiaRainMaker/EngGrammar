@@ -5,8 +5,6 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.HashMap;
-
 /**
  * Created by anastasia on 12/25/17.
  */
@@ -28,15 +26,6 @@ public class Test {
 
     }
 
-    public Test(String name, @NonNull String id, boolean checkedTest, String isNew, Boolean correctTest){
-        this.correctTest = correctTest;
-        this.isNew = isNew;
-        this.id = id;
-        this.checkedTest = checkedTest;
-        this.name = name;
-
-    }
-
     public String getName() {
         return name;
     }
@@ -49,7 +38,7 @@ public class Test {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -57,8 +46,8 @@ public class Test {
         return checkedTest;
     }
 
-    public void setCheckedTest(boolean checkedTest) {
-        this.checkedTest = checkedTest;
+    public void setCheckedTest() {
+        this.checkedTest = false;
     }
 
     public String getIsNew() {
@@ -76,6 +65,5 @@ public class Test {
     public void setCorrectTest(Boolean correctTest) {
         this.correctTest = correctTest;
     }
-
 
 }

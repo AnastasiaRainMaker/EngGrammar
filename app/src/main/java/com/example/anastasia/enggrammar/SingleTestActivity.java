@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,11 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,53 +32,58 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.example.anastasia.enggrammar.Constants.FROM_TESTS;
+import static com.example.anastasia.enggrammar.Constants.TEST_NUMBER;
+import static com.example.anastasia.enggrammar.Constants.TOPIC_NAME;
+
 /**
  * Created by anastasia on 12/27/17.
  */
 
 public class SingleTestActivity extends AppCompatActivity {
-    Boolean fromTests;
-    ImageView arrowBack;
-    TextView testNameView;
-    String testName;
-    String topicName;
-    RecyclerView mRecycler;
-    SingleTestAdapter singleTestAdapter;
-    List<Question> questionList = new ArrayList<>();
-    RecyclerView.LayoutManager mRecyclerManager;
-    BottomNavigationView bottomNavigationView;
-    DatabaseReference mDatabase;
-    ValueEventListener postListener;
+    private Boolean fromTests;
+    private ImageView arrowBack;
+    private TextView testNameView;
+    private String testName;
+    private String topicName;
+    private SingleTestAdapter singleTestAdapter;
+    private List<Question> questionList = new ArrayList<>();
+    private BottomNavigationView bottomNavigationView;
+    private DatabaseReference mDatabase;
+    private ValueEventListener postListener;
     private AppDatabase roomDatabase;
-    Boolean isChecked;
-    Test newTest;
-    String testId;
-    ProgressBar progress;
+    private Boolean isChecked;
+    private Test newTest;
+    private String testId;
+    private ProgressBar progress;
     private CompositeDisposable mSubscriptions;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_test);
+        initViews();
         isChecked = false;
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        fromTests = getIntent().getBooleanExtra(FROM_TESTS, false);
+        topicName = getIntent().getStringExtra(TOPIC_NAME);
+        testName = getIntent().getStringExtra(TEST_NUMBER);
         mDatabase = FirebaseDatabase.getInstance().getReference("topics");
-        fromTests = getIntent().getBooleanExtra("fromTests", false);
-        topicName = getIntent().getStringExtra("topicName");
-        testName = getIntent().getStringExtra("testNumber");
-        arrowBack = findViewById(R.id.arrow_back_toolbar);
-        testNameView = findViewById(R.id.topic_grammar_name);
-        mRecycler = findViewById(R.id.recycler_test_content);
-        mRecyclerManager = new LinearLayoutManager(this);
+        RecyclerView mRecycler = findViewById(R.id.recycler_test_content);
+        RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(mRecyclerManager);
-        singleTestAdapter = new SingleTestAdapter(this, questionList, testId);
+        singleTestAdapter = new SingleTestAdapter(this, questionList);
         mRecycler.setAdapter(singleTestAdapter);
         roomDatabase = AppDatabase.getDatabase(getApplicationContext());
         mSubscriptions = new CompositeDisposable();
-        progress = findViewById(R.id.progress_single_test);
         setUpViews();
         prepareData();
     }
 
+    public void initViews() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        arrowBack = findViewById(R.id.arrow_back_toolbar);
+        testNameView = findViewById(R.id.topic_grammar_name);
+        progress = findViewById(R.id.progress_single_test);
+    }
 
     @Override
     protected void onStop() {
@@ -111,7 +113,7 @@ public class SingleTestActivity extends AppCompatActivity {
                                 testId = mTest.getId();
                                 newTest = new Test();
                                 newTest.setId(testId);
-                                newTest.setCheckedTest(false);
+                                newTest.setCheckedTest();
                                 insertTestRoomRx(newTest);
                             } else {
                                 testId = roomDatabase.testDao().findTestById(mTest.getId()).get(0).getId();
@@ -132,7 +134,7 @@ public class SingleTestActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    singleTestAdapter.setuAnswerListSize(questionList.size());
+                    singleTestAdapter.setUserAnswerListSize(questionList.size());
                     singleTestAdapter.notifyDataSetChanged();
                     if (!isChecked)
                     progress.setVisibility(View.GONE);
@@ -177,8 +179,8 @@ public class SingleTestActivity extends AppCompatActivity {
                             break;
                         case R.id.go_to_rule:
                             Intent i = new Intent(getApplicationContext(), TopicGrActivity.class);
-                            i.putExtra("fromTests", fromTests);
-                            i.putExtra("topicName", topicName);
+                            i.putExtra(FROM_TESTS, fromTests);
+                            i.putExtra(TOPIC_NAME, topicName);
                             startActivity(i);
                             break;
                     }
@@ -289,7 +291,7 @@ public class SingleTestActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorComplete()
-                .doOnComplete(() -> Log.i("RXJAVA", "test added"))
+                .doOnComplete(() -> Log.i(Constants.TAG, "test added"))
                 .subscribe();
     }
 
@@ -298,7 +300,7 @@ public class SingleTestActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorComplete()
-                .doOnComplete(() -> Log.i("RXJAVA", "q added"))
+                .doOnComplete(() -> Log.i(Constants.TAG, "q added"))
                 .subscribe();
     }
 
@@ -316,7 +318,7 @@ public class SingleTestActivity extends AppCompatActivity {
     }
 
     public void onError(String message) {
-        Log.e("rxJava failed", message);
+        Log.e(Constants.TAG, message);
     }
 
 }

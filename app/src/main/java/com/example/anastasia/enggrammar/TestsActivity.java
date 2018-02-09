@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -35,30 +34,34 @@ import java.util.List;
 
 public class TestsActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    View headerView;
-    ImageView menuToolbar;
-    ImageView arrowClose;
-    RecyclerView mRecycler;
-    Animator sAnimator;
-    LinearLayout drawerRow1;
-    LinearLayout drawerRow2;
-    LinearLayout drawerRow3;
-    List<String> testList = new ArrayList<>();
-    TestsAdapter testsAdapter;
-    TextView menuGrammar;
-    TextView menuTests;
-    TextView menuAbout;
-    DatabaseReference mDatabase;
-    ValueEventListener postListener;
-    ProgressBar progressBar;
+    private DrawerLayout drawerLayout;
+    private ImageView menuToolbar;
+    private ImageView arrowClose;
+    private RecyclerView mRecycler;
+    private List<String> testList = new ArrayList<>();
+    private TestsAdapter testsAdapter;
+    private TextView menuGrammar;
+    private TextView menuTests;
+    private TextView menuAbout;
+    private DatabaseReference mDatabase;
+    private ValueEventListener postListener;
+    private ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
+        initViews();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("topics");
-        toolbar = findViewById(R.id.toolbar2);
+        testsAdapter = new TestsAdapter(testList);
+        RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(mRecyclerManager);
+        mRecycler.setAdapter(testsAdapter);
+        setUpViews();
+        prepareTopics();
+    }
+
+    public void initViews() {
+        progressBar = findViewById(R.id.progress_tests);
         drawerLayout = findViewById(R.id.drawer_layout);
         menuToolbar = findViewById(R.id.menu_toolbar2);
         arrowClose = findViewById(R.id.img_drawer_close);
@@ -66,13 +69,6 @@ public class TestsActivity extends AppCompatActivity {
         menuTests = findViewById(R.id.menu_tests);
         menuAbout = findViewById(R.id.menu_about);
         mRecycler = findViewById(R.id.recycler_tests);
-        testsAdapter = new TestsAdapter(testList);
-        RecyclerView.LayoutManager mRecyclerManager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(mRecyclerManager);
-        mRecycler.setAdapter(testsAdapter);
-        progressBar = findViewById(R.id.progress_tests);
-        setUpViews();
-        prepareTopics();
     }
 
     private void prepareTopics() {
@@ -93,7 +89,7 @@ public class TestsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database", "loadPost:onCancelled", databaseError.toException());
+                Log.e(Constants.TAG, "loadPost:onCancelled", databaseError.toException());//todo
 
             }
         };
@@ -101,9 +97,10 @@ public class TestsActivity extends AppCompatActivity {
     }
 
     private void initSpruce() {
-        drawerRow1 = findViewById(R.id.drawer_row1);
-        drawerRow2 = findViewById(R.id.drawer_row2);
-        drawerRow3 = findViewById(R.id.drawer_row3);
+        Animator sAnimator;
+        LinearLayout drawerRow1 = findViewById(R.id.drawer_row1);
+        LinearLayout drawerRow2 = findViewById(R.id.drawer_row2);
+        LinearLayout drawerRow3 = findViewById(R.id.drawer_row3);
         sAnimator = new Spruce.SpruceBuilder(drawerRow1)
                 .sortWith(new DefaultSort(0))
                 .animateWith(DefaultAnimations.fadeInAnimator(drawerRow1, 800),
@@ -127,7 +124,6 @@ public class TestsActivity extends AppCompatActivity {
         final NavigationView navigationView = findViewById(R.id.nav_view2);
         navigationView.setVerticalFadingEdgeEnabled(false);
         navigationView.setVerticalScrollBarEnabled(false);
-        headerView = navigationView.getHeaderView(0);
         ViewTreeObserver vto = navigationView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
